@@ -142,6 +142,7 @@ GEM
     parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
+    pmap (1.1.1)
     prism (0.17.1)
     psych (5.1.1.1)
       stringio
@@ -281,6 +282,7 @@ DEPENDENCIES
   httparty
   importmap-rails
   jbuilder
+  pmap
   puma (~> 5.0)
   rails (~> 7.0.7, >= 7.0.7.2)
   redis (~> 4.0)

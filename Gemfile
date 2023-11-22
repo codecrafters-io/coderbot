@@ -82,3 +82,7 @@ gem "httparty"
 
 # ANSI Colors
 gem "ansi"
+
+
+# Parallel processing
+gem "pmap"
