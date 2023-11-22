@@ -10,9 +10,9 @@ on:
         description: "Dataset name"
         required: true
 
-concurrency:
-  group: ${{ inputs.commit_sha }}
-  cancel-in-progress: true
+# concurrency:
+#   group: ${{ inputs.commit_sha }}-${{ inputs.dataset_name }}
+#   cancel-in-progress: true
 
 jobs:
   test:
