@@ -20,7 +20,7 @@ class Solver < ApplicationRecord
     block.call(LocalRepository.new(repository_dir))
   ensure
     # On Github actions, using Dir.mktmpdir { |dir| ... } causes a permissions error for some reason
-    `rm -rf #{repository_dir}` if repository_dir
+    `rm -rf #{repository_dir} > /dev/null` if repository_dir
   end
 
   def course
