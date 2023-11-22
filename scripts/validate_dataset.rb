@@ -10,8 +10,7 @@ Dir.glob("#{dataset_dir}/*").peach(1) do |submission_dir|
   course = Course.find_by_slug!(submission_data.fetch("course_slug"))
   course.stages.detect { |stage| stage.slug == submission_data.fetch("course_stage_slug") } || raise(ActiveRecord::RecordNotFound)
 
-  logstream_id = SecureRandom.uuid
-  logstream_url = "redis://localhost:6911/#{logstream_id}"
+  logstream_url = "redis://localhost:6911/#{SecureRandom.uuid}"
 
   solver = Solver.create!(
     repository_clone_url: "file:///#{submission_dir}/code",
@@ -23,13 +22,10 @@ Dir.glob("#{dataset_dir}/*").peach(1) do |submission_dir|
     course_stage_slug: submission_data.fetch("course_stage_slug")
   )
 
-  # Dummy
-  Logstream.new(logstream_url).append("Solver status: #{solver.status}")
-  Logstream.new(logstream_url).terminate!
-
   RunSolverJob.perform_now(solver)
+  solver.logstream.terminate!
 
-  File.write(File.join(results_dir, "#{solver.id}.log"), Logstream.new(logstream_url).read)
+  File.write(File.join(results_dir, "#{solver.id}.log"), solver.logstream.read)
   File.write(File.join(results_dir, "#{solver.id}.json"), {status: solver.status}.to_json)
 end
 

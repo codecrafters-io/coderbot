@@ -12,7 +12,8 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
       run_tests_step = Steps::RunTestsStep.new(
         workflow: self,
         stage: solver.course_stage,
-        local_repository: local_repository
+        local_repository: local_repository,
+        logstream: solver.logstream
       )
 
       run_tests_step.perform

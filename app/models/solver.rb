@@ -32,4 +32,8 @@ class Solver < ApplicationRecord
   def language
     Language.find_by_slug!(language_slug)
   end
+
+  def logstream
+    Logstream.new(logstream_url)
+  end
 end
