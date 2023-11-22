@@ -90,6 +90,8 @@ GEM
       irb (>= 1.5.0)
       reline (>= 0.3.1)
     erubi (1.12.0)
+    faker (3.2.2)
+      i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     httparty (0.21.0)
@@ -282,6 +284,7 @@ DEPENDENCIES
   bootsnap
   capybara
   debug
+  faker
   httparty
   importmap-rails
   jbuilder

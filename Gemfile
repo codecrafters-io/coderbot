@@ -85,3 +85,6 @@ gem "pmap"
 
 # Postgres
 gem "pg"
+
+# Fake data
+gem "faker"
