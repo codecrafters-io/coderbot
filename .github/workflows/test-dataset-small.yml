@@ -24,8 +24,10 @@ jobs:
       - run: git config --global user.email "hello@codecrafters.io"
       - run: git config --global user.name "codecrafters-bot"
 
+      - run: bundle exec rails db:migrate
+
       - name: Run tests
-        run: bundle exec  rails runner scripts/validate_dataset.rb tmp/datasets/coderbot_dataset_7/
+        run: bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/coderbot_dataset_7/
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{github.token}}
