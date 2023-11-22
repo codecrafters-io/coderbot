@@ -1,4 +1,4 @@
-name: Test Dataset (Small)
+name: Test Dataset (${{ inputs.dataset_name }})
 
 on:
   workflow_dispatch:
@@ -20,6 +20,11 @@ jobs:
     timeout-minutes: 10
 
     services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6911:6379
+
       postgres:
         image: postgres:12.1
         env:
@@ -27,15 +32,10 @@ jobs:
           POSTGRES_USER: psql_user
           POSTGRES_DB: psql_db
         ports:
-          - 6913:5432
+          - 6912:5432
 
         # This isn't useful because other steps take long enough...
         # options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-      redis:
-        image: redis:latest
-        ports:
-          - 6911:6379
 
     steps:
       - uses: actions/checkout@v3
