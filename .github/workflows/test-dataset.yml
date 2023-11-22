@@ -57,6 +57,7 @@ jobs:
         run: bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/${{ inputs.dataset_name }}
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          HELICONE_API_KEY: ${{ secrets.HELICONE_API_KEY }}
           GITHUB_TOKEN: ${{github.token}}
 
       - name: Persist workflow logs

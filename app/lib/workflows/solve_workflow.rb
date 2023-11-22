@@ -7,7 +7,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
     @solver = solver
   end
 
-  def run!
+  def do_run!
     solver.with_cloned_repository do |local_repository|
       counter = 0
 

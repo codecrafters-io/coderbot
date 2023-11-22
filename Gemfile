@@ -103,3 +103,6 @@ gem "dotenv-rails", groups: [:development, :test]
 
 # Diffs
 gem "diffy"
+
+# Colorize output
+gem "colorize"

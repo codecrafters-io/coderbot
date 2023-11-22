@@ -1,5 +1,21 @@
 class Workflows::BaseWorkflow
+  extend ActiveModel::Callbacks
+
+  define_model_callbacks :run
+
   attr_accessor :status
+
+  around_run do |base_workflow, block|
+    puts "[#{base_workflow.class.name}] Running workflow...".colorize(:blue)
+
+    block.call
+
+    if base_workflow.success?
+      puts "[#{base_workflow.class.name}] Workflow success.".colorize(:green)
+    else
+      puts "[#{base_workflow.class.name}] Workflow failed.".colorize(:red)
+    end
+  end
 
   def initialize
     @status = "pending"
@@ -14,7 +30,9 @@ class Workflows::BaseWorkflow
   end
 
   def run!
-    raise NotImplementedError
+    run_callbacks :run do
+      do_run!
+    end
   end
 
   def success!
@@ -23,5 +41,11 @@ class Workflows::BaseWorkflow
 
   def success?
     status == "success"
+  end
+
+  protected
+
+  def do_run!
+    raise NotImplementedError
   end
 end
