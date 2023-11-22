@@ -7,12 +7,14 @@ class RunSolverJob < ApplicationJob
       solver.started!
     end
 
-    if solver.run
+    if Workflows::SolveWorkflow.new(solver: solver).run
       solver.success!
     else
       solver.failure!
     end
   rescue => e
-    solver.error!(e)
+    puts e.backtrace.reverse.join("\n")
+    puts "Error: #{e.message}"
+    solver.error!
   end
 end

@@ -14,7 +14,22 @@ class Solver < ApplicationRecord
     self.status ||= "not_started"
   end
 
-  def run
-    false
+  def with_cloned_repository(&block)
+    Dir.mktmpdir do |repository_dir|
+      ShellCommand.run!("git clone #{repository_clone_url} #{repository_dir}")
+      block.call(LocalRepository.new(repository_dir))
+    end
+  end
+
+  def course
+    Course.find_by_slug!(course_slug)
+  end
+
+  def course_stage
+    course.stages.detect { |stage| stage.slug == course_stage_slug } || raise(ActiveRecord::RecordNotFound)
+  end
+
+  def language
+    Language.find_by_slug!(language_slug)
   end
 end

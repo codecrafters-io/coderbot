@@ -29,6 +29,10 @@ class CourseStage
     }
   end
 
+  def course
+    Course.find(course_id)
+  end
+
   def tester_test_case_json
     {
       slug: slug,

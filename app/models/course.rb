@@ -18,6 +18,10 @@ class Course
     all.detect { |course| course.slug == slug } || raise(ActiveRecord::RecordNotFound)
   end
 
+  def buildpacks
+    Buildpack.all.select { |buildpack| buildpack.course_id == id }
+  end
+
   def stages
     CourseStage.all.select { |stage| stage.course_id == id }
   end

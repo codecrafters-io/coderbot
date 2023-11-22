@@ -16,3 +16,4 @@ solver = Solver.create!(
 )
 
 RunSolverJob.perform_now(solver)
+puts solver.status

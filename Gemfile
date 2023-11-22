@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.1.2"
+ruby "3.2.2"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.7", ">= 7.0.7.2"
@@ -79,3 +79,6 @@ gem "ruby-lsp-rails", group: [:development], require: false
 
 # HTTP Requests
 gem "httparty"
+
+# ANSI Colors
+gem "ansi"
