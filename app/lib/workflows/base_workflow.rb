@@ -5,7 +5,15 @@ class Workflows::BaseWorkflow
     @status = "pending"
   end
 
-  def run
+  def failure!
+    self.status = "failure"
+  end
+
+  def failure?
+    status == "failure"
+  end
+
+  def run!
     raise NotImplementedError
   end
 
@@ -13,15 +21,7 @@ class Workflows::BaseWorkflow
     self.status = "success"
   end
 
-  def failure!
-    self.status = "failure"
-  end
-
   def success?
     status == "success"
-  end
-
-  def failure?
-    status == "failure"
   end
 end

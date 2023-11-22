@@ -22,6 +22,7 @@ solvers = Dir.glob("#{dataset_dir}/*").pmap(8) do |submission_dir|
     course_stage_slug: submission_data.fetch("course_stage_slug")
   )
 
+  puts "Validating #{solver.friendly_submission_id}"
   RunSolverJob.perform_now(solver)
   solver.logstream.terminate!
 
