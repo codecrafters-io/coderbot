@@ -91,3 +91,15 @@ gem "faker"
 
 # Lint rule to ensure methods are ordered alphabetically
 gem "rubocop-ordered_methods", group: [:development, :test], require: false
+
+# Interactor pattern
+gem "interactor-rails"
+
+# Magic in a bottle
+gem "ruby-openai"
+
+# Load environment variables from .env files
+gem "dotenv-rails", groups: [:development, :test]
+
+# Diffs
+gem "diffy"

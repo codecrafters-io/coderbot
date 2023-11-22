@@ -4,4 +4,8 @@ class Steps::BaseStep
   def initialize(workflow:)
     @workflow = workflow
   end
+
+  def run!
+    raise NotImplementedError
+  end
 end

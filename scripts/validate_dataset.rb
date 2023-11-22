@@ -1,9 +1,12 @@
 dataset_dir = File.expand_path(ARGV[0])
+limit = ARGV[1] ? ARGV[1].to_i : 10000
 
 results_dir = Rails.root.join("tmp", "dataset_validations_results", "#{File.basename(dataset_dir)}-#{Time.now.iso8601[0..18].tr(":", ".")}")
 FileUtils.mkdir_p(results_dir)
 
-solvers = Dir.glob("#{dataset_dir}/*").pmap(8) do |submission_dir|
+submission_dirs = Dir.glob("#{dataset_dir}/*").take(limit)
+
+solvers = submission_dirs.pmap(8) do |submission_dir|
   submission_data = JSON.parse(File.read(File.join(submission_dir, "data.json")))
 
   # Sanity check
@@ -46,14 +49,19 @@ puts "Results written to #{results_dir}"
 
 aggregate_results_file_path = File.join(results_dir, "aggregate_results.json")
 
+aggregate_results = {
+  "total" => solvers.count,
+  "success" => solvers.count { |solver| solver.status == "success" },
+  "failure" => solvers.count { |solver| solver.status == "failure" },
+  "error" => solvers.count { |solver| solver.status == "error" }
+}
+
 File.write(
   aggregate_results_file_path,
-  {
-    "total" => solvers.count,
-    "success" => solvers.count { |solver| solver.status == "success" },
-    "failure" => solvers.count { |solver| solver.status == "failure" },
-    "error" => solvers.count { |solver| solver.status == "error" }
-  }.to_json
+  aggregate_results.to_json
 )
 
-puts "Aggregate results written to #{aggregate_results_file_path}"
+puts ""
+puts aggregate_results
+puts ""
+puts "Aggregate results written to #{aggregate_results_file_path}."

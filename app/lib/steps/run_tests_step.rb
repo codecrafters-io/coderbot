@@ -13,7 +13,7 @@ class Steps::RunTestsStep < Steps::BaseStep
     @logstream = logstream
   end
 
-  def perform
+  def run!
     logstream.info("Running tests...")
     self.test_runner_output = LocalTestRunner.new(stage.course, local_repository.repository_dir).run_tests(stage)
 

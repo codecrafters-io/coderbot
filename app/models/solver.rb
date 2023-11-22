@@ -14,15 +14,6 @@ class Solver < ApplicationRecord
     self.status ||= "not_started"
   end
 
-  def with_cloned_repository(&block)
-    repository_dir = Dir.mktmpdir
-    ShellCommand.run!("git clone #{repository_clone_url} #{repository_dir}")
-    block.call(LocalRepository.new(repository_dir))
-  ensure
-    # On Github actions, using Dir.mktmpdir { |dir| ... } causes a permissions error for some reason
-    `rm -rf #{repository_dir} 2>&1 > /dev/null` if repository_dir
-  end
-
   def course
     Course.find_by_slug!(course_slug)
   end
@@ -41,5 +32,14 @@ class Solver < ApplicationRecord
 
   def logstream
     Logstream.new(logstream_url)
+  end
+
+  def with_cloned_repository(&block)
+    repository_dir = Dir.mktmpdir
+    ShellCommand.run!("git clone #{repository_clone_url} #{repository_dir}")
+    block.call(LocalRepository.new(repository_dir))
+  ensure
+    # On Github actions, using Dir.mktmpdir { |dir| ... } causes a permissions error for some reason
+    `rm -rf #{repository_dir} 2>&1 > /dev/null` if repository_dir
   end
 end
