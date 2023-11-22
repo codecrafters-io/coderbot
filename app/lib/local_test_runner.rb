@@ -42,7 +42,7 @@ class LocalTestRunner
         "#{docker_image_tag} /init.sh"
       ].join(" "))
 
-      run_command_result = run_command.run(stream_output: true, summarize: false)
+      run_command_result = run_command.run(stream_output: false, summarize: false)
 
       # Precompilation failures might cause the test runner to exit with a non-zero exit code.
       # raise "Failed to run tests, got exit code #{run_command_result.exit_code}. Stdout: #{run_command_result.stdout} Stderr: #{run_command_result.stderr}" unless [0, 1].include?(run_command_result.exit_code)

@@ -25,13 +25,24 @@ Dir.glob("#{dataset_dir}/*").peach(8) do |submission_dir|
   RunSolverJob.perform_now(solver)
   solver.logstream.terminate!
 
-  File.write(File.join(results_dir, "#{solver.id}.log"), solver.logstream.read)
-  File.write(File.join(results_dir, "#{solver.id}.json"), {status: solver.status}.to_json)
+  solver_dir = File.join(results_dir, solver.status)
+  FileUtils.mkdir_p(solver_dir)
+
+  File.write(File.join(solver_dir, "#{solver.id}.log"), solver.logstream.read)
+
+  File.write(
+    File.join(solver_dir, "#{solver.id}.json"),
+    {
+      status: solver.status,
+      duration_ms: ((solver.updated_at - solver.created_at) * 1000)
+    }.to_json
+  )
 end
 
 puts "Results written to #{results_dir}"
 
 aggregate_results_file_path = File.join(results_dir, "aggregate_results.json")
+
 File.write(
   aggregate_results_file_path,
   {
