@@ -6,7 +6,8 @@ class EditWrongSubmissionV1Prompt < BasePrompt
     context.result = chat(
       [{role: "user", content: user_message(context.stage, context.language, context.original_code, context.test_runner_output)}],
       seed: context.seed,
-      should_stream: false
+      should_stream: false,
+      request_timeout: 240
     )
   end
 
