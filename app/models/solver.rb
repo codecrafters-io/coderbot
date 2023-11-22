@@ -13,4 +13,8 @@ class Solver < ApplicationRecord
   before_validation do
     self.status ||= "not_started"
   end
+
+  def run
+    false
+  end
 end
