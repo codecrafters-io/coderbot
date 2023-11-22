@@ -3,7 +3,7 @@ dataset_dir = File.expand_path(ARGV[0])
 results_dir = Rails.root.join("tmp", "dataset_validations_results", "#{File.basename(dataset_dir)}-#{Time.now.iso8601[0..18].tr(":", ".")}")
 FileUtils.mkdir_p(results_dir)
 
-solvers = Dir.glob("#{dataset_dir}/*").peach(8) do |submission_dir|
+solvers = Dir.glob("#{dataset_dir}/*").pmap(8) do |submission_dir|
   submission_data = JSON.parse(File.read(File.join(submission_dir, "data.json")))
 
   # Sanity check
