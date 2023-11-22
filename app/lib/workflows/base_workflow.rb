@@ -4,16 +4,17 @@ class Workflows::BaseWorkflow
   define_model_callbacks :run
 
   attr_accessor :status
+  attr_accessor :identifier
 
   around_run do |base_workflow, block|
-    puts "[#{base_workflow.class.name}] Running workflow...".colorize(:blue)
+    puts "#{base_workflow.log_prefix} Running workflow...".colorize(:blue)
 
     block.call
 
     if base_workflow.success?
-      puts "[#{base_workflow.class.name}] Workflow success.".colorize(:green)
+      puts "#{base_workflow.log_prefix} Workflow success.".colorize(:green)
     else
-      puts "[#{base_workflow.class.name}] Workflow failed.".colorize(:red)
+      puts "#{base_workflow.log_prefix} Workflow failed.".colorize(:red)
     end
   end
 
@@ -47,5 +48,9 @@ class Workflows::BaseWorkflow
 
   def do_run!
     raise NotImplementedError
+  end
+
+  def log_prefix
+    "[#{self.class.name.demodulize}(#{identifier})]"
   end
 end

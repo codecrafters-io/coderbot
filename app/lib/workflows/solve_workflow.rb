@@ -5,6 +5,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
     super()
 
     @solver = solver
+    @identifier = solver.friendly_submission_id
   end
 
   def do_run!
