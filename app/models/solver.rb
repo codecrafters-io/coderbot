@@ -15,10 +15,12 @@ class Solver < ApplicationRecord
   end
 
   def with_cloned_repository(&block)
-    Dir.mktmpdir do |repository_dir|
-      ShellCommand.run!("git clone #{repository_clone_url} #{repository_dir}")
-      block.call(LocalRepository.new(repository_dir))
-    end
+    repository_dir = Dir.mktmpdir
+    ShellCommand.run!("git clone #{repository_clone_url} #{repository_dir}")
+    block.call(LocalRepository.new(repository_dir))
+  ensure
+    # On Github actions, using Dir.mktmpdir { |dir| ... } causes a permissions error for some reason
+    `rm -rf #{repository_dir}` if repository_dir
   end
 
   def course
