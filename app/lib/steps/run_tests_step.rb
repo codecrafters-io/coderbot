@@ -13,7 +13,7 @@ class Steps::RunTestsStep < Steps::BaseStep
     @logstream = logstream
   end
 
-  def run!
+  def do_run!
     logstream.info("Running tests...")
     self.test_runner_output = LocalTestRunner.new(stage.course, local_repository.repository_dir).run_tests(stage)
 
@@ -22,17 +22,11 @@ class Steps::RunTestsStep < Steps::BaseStep
     logstream.append("\n\n")
 
     if test_runner_output.passed?
+      success!
       logstream.success("Tests passed!")
     else
+      failure!
       logstream.error("Tests failed!")
     end
-  end
-
-  def success?
-    test_runner_output.passed?
-  end
-
-  def title
-    "Run tests (Stage ##{stage.position})"
   end
 end

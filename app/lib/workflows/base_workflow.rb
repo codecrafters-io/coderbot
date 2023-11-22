@@ -30,6 +30,10 @@ class Workflows::BaseWorkflow
     status == "failure"
   end
 
+  def log_prefix
+    "[#{self.class.name.demodulize}(#{identifier})]"
+  end
+
   def run!
     run_callbacks :run do
       do_run!
@@ -48,9 +52,5 @@ class Workflows::BaseWorkflow
 
   def do_run!
     raise NotImplementedError
-  end
-
-  def log_prefix
-    "[#{self.class.name.demodulize}(#{identifier})]"
   end
 end

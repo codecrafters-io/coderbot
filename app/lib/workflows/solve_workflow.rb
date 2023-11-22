@@ -5,7 +5,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
     super()
 
     @solver = solver
-    @identifier = solver.friendly_submission_id
+    @identifier = solver.friendly_id
   end
 
   def do_run!
@@ -36,6 +36,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
         end
 
         attempt_fix_step = Steps::AttemptFixStep.new(
+          workflow: self,
           stage: solver.course_stage,
           local_repository: local_repository,
           test_runner_output: run_tests_step.test_runner_output,

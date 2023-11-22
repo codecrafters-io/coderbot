@@ -7,14 +7,16 @@ class Steps::AttemptFixStep < Steps::BaseStep
   attr_accessor :diff
   attr_accessor :explanation
 
-  def initialize(stage:, local_repository:, test_runner_output:, logstream:)
+  def initialize(stage:, local_repository:, test_runner_output:, logstream:, **args)
+    super(**args)
+
     @stage = stage
     @local_repository = local_repository
     @test_runner_output = test_runner_output
     @logstream = logstream
   end
 
-  def run!
+  def do_run!
     current_code = File.read(local_repository.code_file_path)
 
     result = EditWrongSubmissionV1Prompt.call(
@@ -45,5 +47,7 @@ class Steps::AttemptFixStep < Steps::BaseStep
     logstream.info("")
 
     File.write(local_repository.code_file_path, edited_code)
+
+    success!
   end
 end
