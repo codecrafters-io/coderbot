@@ -7,3 +7,7 @@ download_datasets:
 	unzip tmp/datasets/coderbot_dataset_7.zip -d tmp/datasets/coderbot_dataset_7
 	unzip tmp/datasets/coderbot_dataset_35.zip -d tmp/datasets/coderbot_dataset_35
 	unzip tmp/datasets/coderbot_dataset_140.zip -d tmp/datasets/coderbot_dataset_140
+
+test_dataset_small:
+	gh workflow run test-dataset-small.yml
+

@@ -1,3 +1,5 @@
+name: Test Dataset (Small)
+
 on:
   workflow_dispatch:
 
