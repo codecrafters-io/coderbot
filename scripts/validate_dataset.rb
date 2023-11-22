@@ -28,10 +28,10 @@ solvers = Dir.glob("#{dataset_dir}/*").pmap(8) do |submission_dir|
   solver_dir = File.join(results_dir, solver.status)
   FileUtils.mkdir_p(solver_dir)
 
-  File.write(File.join(solver_dir, "#{solver.id}.log"), solver.logstream.read)
+  File.write(File.join(solver_dir, "#{solver.friendly_submission_id}.log"), solver.logstream.read)
 
   File.write(
-    File.join(solver_dir, "#{solver.id}.json"),
+    File.join(solver_dir, "#{solver.friendly_submission_id}.json"),
     {
       status: solver.status,
       duration_ms: ((solver.updated_at - solver.created_at) * 1000)

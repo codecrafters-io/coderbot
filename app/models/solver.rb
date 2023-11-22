@@ -31,6 +31,10 @@ class Solver < ApplicationRecord
     course.stages.detect { |stage| stage.slug == course_stage_slug } || raise(ActiveRecord::RecordNotFound)
   end
 
+  def friendly_submission_id
+    @submission_friendly_id ||= FriendlyIdGenerator.generate(Integer(last_submission_commit_sha, 16))
+  end
+
   def language
     Language.find_by_slug!(language_slug)
   end
