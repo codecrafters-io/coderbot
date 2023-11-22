@@ -71,9 +71,11 @@ group :test do
   gem "webdrivers"
 end
 
-# Formattinkg
+# Formatting
 gem "standard", group: [:development, :test], require: false
 
-group :development do
-  gem "ruby-lsp-rails"
-end
+# IDE features
+gem "ruby-lsp-rails", group: [:development], require: false
+
+# HTTP Requests
+gem "httparty"
