@@ -2,9 +2,13 @@ name: Test Dataset (Small)
 
 on:
   workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: "Commit SHA to test"
+        required: true
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ inputs.commit_sha }}
   cancel-in-progress: true
 
 jobs:
@@ -14,6 +18,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.commit_sha }}
 
       - uses: ruby/setup-ruby@v1
         with:

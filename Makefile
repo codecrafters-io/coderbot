@@ -9,5 +9,5 @@ download_datasets:
 	unzip tmp/datasets/coderbot_dataset_140.zip -d tmp/datasets/coderbot_dataset_140
 
 test_dataset_small:
-	gh workflow run test-dataset-small.yml
+	gh workflow run test-dataset-small.yml -F commit_sha=$(shell git rev-parse HEAD)
 
