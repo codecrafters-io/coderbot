@@ -1,4 +1,4 @@
-name: Test Dataset (${{ inputs.dataset_name }})
+name: Test Dataset
 
 on:
   workflow_dispatch:
