@@ -6,6 +6,9 @@ on:
       commit_sha:
         description: "Commit SHA to test"
         required: true
+      dataset_name:
+        description: "Dataset name"
+        required: true
 
 concurrency:
   group: ${{ inputs.commit_sha }}
@@ -15,6 +18,24 @@ jobs:
   test:
     runs-on: ubuntu-latest-16-cores
     timeout-minutes: 10
+
+    services:
+      postgres:
+        image: postgres:12.1
+        env:
+          POSTGRES_PASSWORD: psql_pass
+          POSTGRES_USER: psql_user
+          POSTGRES_DB: psql_db
+        ports:
+          - 6913:5432
+
+        # This isn't useful because other steps take long enough...
+        # options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+      redis:
+        image: redis:latest
+        ports:
+          - 6911:6379
 
     steps:
       - uses: actions/checkout@v3
@@ -33,7 +54,7 @@ jobs:
       - run: bundle exec rails db:migrate
 
       - name: Run tests
-        run: bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/coderbot_dataset_7/
+        run: bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/${{ inputs.dataset_name }}
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{github.token}}

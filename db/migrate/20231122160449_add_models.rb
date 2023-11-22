@@ -1,5 +1,7 @@
 class AddModels < ActiveRecord::Migration[7.0]
   def change
+    enable_extension "pgcrypto"
+
     create_table :solvers, id: :uuid do |t|
       t.string :status, null: false
       t.string :repository_clone_url, null: false

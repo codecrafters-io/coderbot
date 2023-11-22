@@ -11,7 +11,21 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2023_11_22_160449) do
-# Could not dump table "solvers" because of following StandardError
-#   Unknown type 'uuid' for column 'id'
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
+  enable_extension "plpgsql"
+
+  create_table "solvers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "status", null: false
+    t.string "repository_clone_url", null: false
+    t.string "last_submission_commit_sha", null: false
+    t.string "last_successful_submission_commit_sha"
+    t.string "language_slug", null: false
+    t.string "course_slug", null: false
+    t.string "course_stage_slug", null: false
+    t.string "logstream_url", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
 end
