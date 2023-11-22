@@ -1,0 +1,6 @@
+require: rubocop-ordered_methods
+
+Layout/OrderedMethods:
+  EnforcedStyle: alphabetical
+  IgnoredMethods: initialize
+  Signature: nil

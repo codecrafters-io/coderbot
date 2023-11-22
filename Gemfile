@@ -88,3 +88,6 @@ gem "pg"
 
 # Fake data
 gem "faker"
+
+# Lint rule to ensure methods are ordered alphabetically
+gem "rubocop-ordered_methods", group: [:development, :test], require: false
