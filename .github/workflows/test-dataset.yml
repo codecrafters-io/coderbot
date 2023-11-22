@@ -67,4 +67,7 @@ jobs:
           path: tmp/dataset_validations_results
 
       - name: Summary
-        run: cat tmp/dataset_validations_results/*/aggregate_results.json > $GITHUB_STEP_SUMMARY
+        run: |
+          echo "# Failure: $(jq -r '.failure' tmp/dataset_validations_results/*/aggregate_results.json)" > $GITHUB_STEP_SUMMARY
+          echo "# Success: $(jq -r '.success' tmp/dataset_validations_results/*/aggregate_results.json)" > $GITHUB_STEP_SUMMARY
+          echo "# Total: $(jq -r '.total' tmp/dataset_validations_results/*/aggregate_results.json)" > $GITHUB_STEP_SUMMARY

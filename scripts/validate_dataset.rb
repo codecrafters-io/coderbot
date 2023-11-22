@@ -3,7 +3,7 @@ dataset_dir = File.expand_path(ARGV[0])
 results_dir = Rails.root.join("tmp", "dataset_validations_results", "#{File.basename(dataset_dir)}-#{Time.now.iso8601[0..18].tr(":", ".")}")
 FileUtils.mkdir_p(results_dir)
 
-Dir.glob("#{dataset_dir}/*").peach(8) do |submission_dir|
+solvers = Dir.glob("#{dataset_dir}/*").peach(8) do |submission_dir|
   submission_data = JSON.parse(File.read(File.join(submission_dir, "data.json")))
 
   # Sanity check
@@ -37,6 +37,8 @@ Dir.glob("#{dataset_dir}/*").peach(8) do |submission_dir|
       duration_ms: ((solver.updated_at - solver.created_at) * 1000)
     }.to_json
   )
+
+  solver
 end
 
 puts "Results written to #{results_dir}"
@@ -46,10 +48,10 @@ aggregate_results_file_path = File.join(results_dir, "aggregate_results.json")
 File.write(
   aggregate_results_file_path,
   {
-    "total" => Dir.glob("#{results_dir}/*.json").count,
-    "success" => Dir.glob("#{results_dir}/*.json").count { |path| JSON.parse(File.read(path)).fetch("status") == "success" },
-    "failure" => Dir.glob("#{results_dir}/*.json").count { |path| JSON.parse(File.read(path)).fetch("status") == "failure" },
-    "error" => Dir.glob("#{results_dir}/*.json").count { |path| JSON.parse(File.read(path)).fetch("status") == "error" }
+    "total" => solvers.count,
+    "success" => solvers.count { |solver| solver.status == "success" },
+    "failure" => solvers.count { |solver| solver.status == "failure" },
+    "error" => solvers.count { |solver| solver.status == "error" }
   }.to_json
 )
 
