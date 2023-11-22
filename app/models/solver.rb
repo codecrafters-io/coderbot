@@ -1,13 +1,4 @@
 class Solver < ApplicationRecord
-  # t.string :status, null: false
-  # t.string :repository_clone_url, null: false
-  # t.string :last_submission_commit_sha, null: false
-  # t.string :last_successful_submission_commit_sha
-  # t.string :language_slug, null: false
-  # t.string :course_slug, null: false
-  # t.string :course_stage_slug, null: false
-  # t.string :logstream_url, null: false
-
   ALL_STATUSES = %w[not_started started failure success error].freeze
 
   enum status: ALL_STATUSES.zip(ALL_STATUSES).to_h
