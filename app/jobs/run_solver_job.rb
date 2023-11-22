@@ -7,7 +7,10 @@ class RunSolverJob < ApplicationJob
       solver.started!
     end
 
-    if Workflows::SolveWorkflow.new(solver: solver).run!
+    workflow = Workflows::SolveWorkflow.new(solver: solver)
+    workflow.run!
+
+    if workflow.success?
       solver.success!
     else
       solver.failure!
