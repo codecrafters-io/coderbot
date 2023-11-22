@@ -47,7 +47,7 @@ jobs:
           ruby-version: "3.2"
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-      - run: make download_datasets
+      - run: scripts/download_dataset.sh ${{ inputs.dataset_name }}
       - run: git config --global user.email "hello@codecrafters.io"
       - run: git config --global user.name "codecrafters-bot"
 
