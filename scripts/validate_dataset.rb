@@ -1,3 +1,5 @@
+require "concurrent"
+
 dataset_dir = File.expand_path(ARGV[0])
 limit = ARGV[1] ? ARGV[1].to_i : 10000
 
@@ -23,6 +25,16 @@ def solver_logs_path(solver)
 end
 
 Store.ensure_loaded!
+
+mlflow_run = MlflowRun.create!
+
+mlflow_run.log_test_dataset(
+  name: File.basename(dataset_dir),
+  profile: "#{submission_dirs} entries"
+)
+
+solvers_count = submission_dirs.count
+counter = Concurrent::AtomicFixnum.new(0)
 
 solvers = submission_dirs.pmap(8) do |submission_dir|
   submission_data = JSON.parse(File.read(File.join(submission_dir, "data.json")))
@@ -58,6 +70,12 @@ solvers = submission_dirs.pmap(8) do |submission_dir|
       duration_ms: ((solver.updated_at - solver.created_at) * 1000)
     }.to_json
   )
+
+  counter.increment
+
+  # TODO: Also log step count?
+  success_rate = (solvers.count { |solver| solver.status == "success" }.to_f / counter.value * 100).round(2)
+  mlflow_run.log_metric(counter.value, "success_rate", success_rate)
 
   solver
 end

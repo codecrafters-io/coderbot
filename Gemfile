@@ -106,3 +106,6 @@ gem "diffy"
 
 # Colorize output
 gem "colorize"
+
+# Concurrent processing
+gem "concurrent-ruby"

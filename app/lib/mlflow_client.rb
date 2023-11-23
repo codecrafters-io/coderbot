@@ -2,7 +2,7 @@ class MlflowClient
   BASE_URL = "https://dbc-79c30a15-a36b.cloud.databricks.com"
 
   def create_run(tags)
-    HTTParty.post("#{BASE_URL}/api/2.0/mlflow/runs/create", {
+    response = HTTParty.post("#{BASE_URL}/api/2.0/mlflow/runs/create", {
       headers: headers,
       body: {
         experiment_id: 4270847108618290,
@@ -10,6 +10,8 @@ class MlflowClient
         tags: tags.map { |k, v| {key: k, value: v} }
       }.to_json
     })
+
+    JSON.parse(response.body).fetch("run").fetch("info").fetch("run_id")
   end
 
   def delete_run(run_id)
@@ -44,7 +46,7 @@ class MlflowClient
   end
 
   # Example: MlflowClient.new.log_test_dataset("<wip>", "test", "test", "internal", "codecrafters", "zip", "7 entries")
-  def log_test_dataset(run_id, name, digest, source_type, source, schema, profile)
+  def log_test_dataset(run_id, name, digest, profile, source_type, source, schema)
     HTTParty.post("#{BASE_URL}/api/2.0/mlflow/runs/log-inputs", {
       headers: headers,
       body: {

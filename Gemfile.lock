@@ -311,6 +311,7 @@ DEPENDENCIES
   bootsnap
   capybara
   colorize
+  concurrent-ruby
   debug
   diffy
   dotenv-rails
