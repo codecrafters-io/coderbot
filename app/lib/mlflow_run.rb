@@ -2,14 +2,16 @@ class MlflowRun
   BASE_URL = "https://dbc-79c30a15-a36b.cloud.databricks.com"
 
   attr_accessor :run_id
+  attr_accessor :artifact_uri
 
-  def initialize(run_id:)
+  def initialize(run_id:, artifact_uri:)
     @run_id = run_id
+    @artifact_uri = artifact_uri
   end
 
   def self.create!
-    run_id = MlflowClient.new.create_run({environment: ENV["CI"] ? "ci" : "local"})
-    MlflowRun.new(run_id: run_id)
+    run = MlflowClient.new.create_run({environment: ENV["CI"] ? "ci" : "local"})
+    MlflowRun.new(run_id: run.fetch(:id), artifact_uri: run.fetch(:artifact_uri))
   end
 
   def finish!

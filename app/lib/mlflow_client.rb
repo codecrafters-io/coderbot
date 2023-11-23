@@ -11,7 +11,10 @@ class MlflowClient
       }.to_json
     })
 
-    JSON.parse(response.body).fetch("run").fetch("info").fetch("run_id")
+    {
+      id: JSON.parse(response.body).fetch("run").fetch("info").fetch("run_id"),
+      artifact_uri: JSON.parse(response.body).fetch("run").fetch("info").fetch("artifact_uri")
+    }
   end
 
   def delete_run(run_id)
