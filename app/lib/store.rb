@@ -33,22 +33,8 @@ class Store
     @models_map = {}
   end
 
-  def load_from_file(path)
-    data = JSON.parse(File.read(path))
-
-    data.each do |model_class, serialized_models|
-      model_class = Object.const_get(model_class)
-
-      serialized_models.each do |serialized_model|
-        instance = model_class.new(serialized_model).tap(&:validate!)
-        add(instance)
-      end
-    end
-  end
-
   def fetch_all
-    response = HTTParty.get("https://paul-backend.ccdev.dev/api/v1/courses?include=stages,buildpacks")
-    # response = HTTParty.get("https://backend.codecrafters.io/api/v1/courses?include=stages,buildpacks")
+    response = HTTParty.get("https://backend.codecrafters.io/api/v1/courses?include=stages,buildpacks")
     parsed_response = JSON.parse(response.body)
 
     courses = parsed_response["data"].map do |course_data|
@@ -91,6 +77,19 @@ class Store
 
     models.each do |model|
       add(model)
+    end
+  end
+
+  def load_from_file(path)
+    data = JSON.parse(File.read(path))
+
+    data.each do |model_class, serialized_models|
+      model_class = Object.const_get(model_class)
+
+      serialized_models.each do |serialized_model|
+        instance = model_class.new(serialized_model).tap(&:validate!)
+        add(instance)
+      end
     end
   end
 
