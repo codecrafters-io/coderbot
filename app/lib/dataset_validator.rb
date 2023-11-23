@@ -37,6 +37,10 @@ class DatasetValidator
     end
 
     solvers.peach(16) do |solver|
+      TesterDownloader.new(solver.course).download_if_needed
+    end
+
+    solvers.peach(16) do |solver|
       puts "Validating #{solver.friendly_id}"
 
       RunSolverJob.perform_now(solver)
