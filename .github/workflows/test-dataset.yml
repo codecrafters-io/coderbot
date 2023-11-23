@@ -63,6 +63,7 @@ jobs:
           HELICONE_API_KEY: ${{ secrets.HELICONE_API_KEY }}
           GITHUB_TOKEN: ${{github.token}}
           GIT_BRANCH: ${{ inputs.branch_name }}
+          MLFLOW_API_KEY: ${{ secrets.MLFLOW_API_KEY }}
 
       - name: Persist workflow logs
         uses: actions/upload-artifact@v3
