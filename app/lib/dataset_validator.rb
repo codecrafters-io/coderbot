@@ -99,7 +99,7 @@ class DatasetValidator
 
     mlflow_run.log_dataset(
       name: File.basename(dataset_dir),
-      profile: "#{submission_dirs_in_dataset} entries"
+      profile: "#{submission_dirs_in_dataset.size} entries"
     )
 
     mlflow_run.log_param("branch", ENV.fetch("GIT_BRANCH", `git rev-parse --abbrev-ref HEAD`.strip))
@@ -211,4 +211,3 @@ class DatasetValidator
     File.write(solver_logs_path(solver), solver.logstream.read)
   end
 end
-
