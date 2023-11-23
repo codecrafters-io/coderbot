@@ -12,6 +12,10 @@ test_medium:
 test_large:
 	scripts/trigger_gh_workflow.sh coderbot_dataset_140
 
+test_large_against_main:
+	scripts/trigger_gh_workflow.sh coderbot_dataset_140 main
+	scripts/trigger_gh_workflow.sh coderbot_dataset_140
+
 local_test_small:
 	bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/coderbot_dataset_7
 
