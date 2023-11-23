@@ -1,4 +1,4 @@
-submission_dir = Rails.root.join("tmp", "datasets", "coderbot_dataset_7", "5c2f494e-d013-4c78-a0b0-8120bea52795")
+submission_dir = Rails.root.join("tmp", "datasets", "coderbot_v2_dataset_7", "5c2f494e-d013-4c78-a0b0-8120bea52795")
 submission_data = JSON.parse(File.read(submission_dir.join("data.json")))
 
 # Sanity check
