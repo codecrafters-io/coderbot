@@ -33,6 +33,9 @@ mlflow_run.log_dataset(
   profile: "#{submission_dirs} entries"
 )
 
+mlflow_run.log_param("branch", ENV.fetch("GIT_BRANCH", `git rev-parse --abbrev-ref HEAD`.strip))
+mlflow_run.log_param("commit", `git rev-parse HEAD`.strip)
+
 step_counter = Concurrent::AtomicFixnum.new(0)
 success_counter = Concurrent::AtomicFixnum.new(0)
 

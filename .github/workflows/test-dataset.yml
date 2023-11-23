@@ -62,6 +62,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           HELICONE_API_KEY: ${{ secrets.HELICONE_API_KEY }}
           GITHUB_TOKEN: ${{github.token}}
+          GIT_BRANCH: ${{ inputs.branch_name }}
 
       - name: Persist workflow logs
         uses: actions/upload-artifact@v3
