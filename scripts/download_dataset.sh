@@ -14,5 +14,3 @@ else
 fi
 
 unzip -q "tmp/datasets/${datasetName}.zip" -d "tmp/datasets/${datasetName}"
-
-sudo chown -R $USER "tmp/datasets/${datasetName}"
