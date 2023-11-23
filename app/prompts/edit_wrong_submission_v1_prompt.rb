@@ -60,7 +60,8 @@ class EditWrongSubmissionV1Prompt < BasePrompt
 
       </test-runner-error-message>
 
-      Your goal is to fix the user's code so that it passes the stage.
+      Your goal is to fix the user's code so that it passes the stage. Keep in mind that the user is a beginner, so their code might
+      contain mistakes that you wouldn't typically make.
 
       First, think through what the bug might be. Then, print out a plan to fix the bug. Once you have the plan, implement it by editing
       the user's code. Print the FULL contents of the edited file delimited by triple backticks.
@@ -68,8 +69,8 @@ class EditWrongSubmissionV1Prompt < BasePrompt
       Here are some rules to follow:
 
       * Keep your changes minimal. Only make minor edits, don't rewrite large portions of the code.
-      * Add comments to explain your changes, and don't remove existing comments unless they're incorrect or outdated.
-      * If you see obvious mistakes, fix them. The user is a beginner, so their code might contain mistakes that you wouldn't typically make.
+      * Write production-quality code. Don't leave in any commented-out code or unused variables.
+      * Don't change existing comments unless they're incorrect or outdated.
       * IMPORTANT: Print the FULL contents of the edited file delimited by triple backticks. Don't print partial contents of the file.
     PROMPT
   end
