@@ -18,14 +18,6 @@ class Course
     all.detect { |course| course.slug == slug } || raise(ActiveRecord::RecordNotFound)
   end
 
-  def buildpacks
-    Buildpack.all.select { |buildpack| buildpack.course_id == id }
-  end
-
-  def stages
-    CourseStage.all.select { |stage| stage.course_id == id }
-  end
-
   def attributes
     {
       "id" => nil,
@@ -33,5 +25,13 @@ class Course
       "description_markdown" => nil,
       "name" => nil
     }
+  end
+
+  def buildpacks
+    Buildpack.all.select { |buildpack| buildpack.course_id == id }
+  end
+
+  def stages
+    CourseStage.all.select { |stage| stage.course_id == id }
   end
 end
