@@ -139,6 +139,7 @@ class DatasetValidator
     rows = solvers.map do |solver|
       [
         solver.friendly_id,
+        "#{solver.course_slug}/#{solver.language_slug}",
         solver.status,
         solver.changed_lines_count,
         solver.steps_count,
@@ -146,7 +147,7 @@ class DatasetValidator
       ]
     end
 
-    table = Terminal::Table.new headings: ["ID", "Status", "Diff size", "Steps count", "Duration"], rows: rows
+    table = Terminal::Table.new headings: ["ID", "Course/Lang", "Status", "Diff size", "Steps count", "Duration"], rows: rows
     puts table
   end
 
