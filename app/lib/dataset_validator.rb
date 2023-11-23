@@ -147,9 +147,9 @@ class DatasetValidator
         solver.friendly_id,
         "#{solver.course_slug}/#{solver.language_slug}",
         solver.status,
-        solver.changed_lines_count,
-        solver.steps_count,
-        "#{solver.duration_secs}s"
+        solver.status.eql?("success") ? solver.changed_lines_count : "-",
+        solver.status.eql?("success") ? solver.steps_count : "-",
+        solver.status.eql?("success") ? "#{solver.duration_secs}s" : "-"
       ]
     end
 
