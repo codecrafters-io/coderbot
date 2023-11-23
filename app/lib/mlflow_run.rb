@@ -23,4 +23,8 @@ class MlflowRun
   def log_metric(step, key, value)
     MlflowClient.new.log_metric(run_id, step, key, value)
   end
+
+  def log_param(key, value)
+    MlflowClient.new.log_param(run_id, key, value)
+  end
 end
