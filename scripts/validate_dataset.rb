@@ -36,8 +36,11 @@ mlflow_run.log_dataset(
 mlflow_run.log_param("branch", ENV.fetch("GIT_BRANCH", `git rev-parse --abbrev-ref HEAD`.strip))
 mlflow_run.log_param("commit", `git rev-parse HEAD`.strip)
 
-step_counter = Concurrent::AtomicFixnum.new(0)
+finished_counter = Concurrent::AtomicFixnum.new(0)
 success_counter = Concurrent::AtomicFixnum.new(0)
+step_counts_array = Concurrent::Array.new
+durations_array = Concurrent::Array.new
+diff_sizes_array = Concurrent::Array.new
 
 solvers = submission_dirs.pmap(16) do |submission_dir|
   submission_data = JSON.parse(File.read(File.join(submission_dir, "data.json")))
@@ -74,12 +77,31 @@ solvers = submission_dirs.pmap(16) do |submission_dir|
     }.to_json
   )
 
-  step_counter.increment
+  finished_counter.increment
   success_counter.increment if solver.status == "success"
+  step_counts_array.concat([solver.steps_count]) if solver.status == "success"
+  diff_sizes_array.concat([solver.changed_lines_count]) if solver.status == "success"
+  durations_array.concat([solver.duration_ms]) if solver.status == "success"
 
   # TODO: Also log step count?
-  success_rate = (success_counter.value.to_f / step_counter.value) * 100
-  mlflow_run.log_metric(step_counter.value, "success_rate", success_rate)
+  success_rate = (success_counter.value.to_f / finished_counter.value) * 100
+  mlflow_run.log_metric(finished_counter.value, "success_rate", success_rate)
+
+  if step_counts_array.size > 0
+    step_counts_average = step_counts_array.sum.to_f / step_counts_array.size
+    mlflow_run.log_metric(finished_counter.value, "avg_step_count", step_counts_average)
+  end
+
+  if diff_sizes_array.size > 0
+    diff_sizes_average = diff_sizes_array.sum.to_f / diff_sizes_array.size
+    mlflow_run.log_metric(finished_counter.value, "avg_diff_size", diff_sizes_average)
+  end
+
+  if durations_array.size > 0
+    duration_ms_average = durations_array.sum.to_f / durations_array.size
+    mlflow_run.log_metric(finished_counter.value, "avg_duration_ms", duration_ms_average)
+  end
+
   mlflow_run.log_artifact(solver_json_path(solver), "results/#{solver.friendly_id}.json")
   mlflow_run.log_artifact(solver_logs_path(solver), "logs/#{solver.friendly_id}.log")
 

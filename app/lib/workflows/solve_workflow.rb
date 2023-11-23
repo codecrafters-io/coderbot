@@ -10,6 +10,8 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
 
   def do_run!
     solver.with_cloned_repository do |local_repository|
+      started_at = Time.now
+      original_code = File.read(local_repository.code_file_path)
       counter = 0
 
       loop do
@@ -45,6 +47,14 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
 
         attempt_fix_step.run!
       end
+
+      ended_at = Time.now
+      final_code = File.read(local_repository.code_file_path)
+
+      solver.final_diff = Diffy::Diff.new(original_code, final_code).to_s
+      solver.steps_count = counter
+      solver.duration_ms = (ended_at - started_at) * 1000
+      solver.save!
     end
   end
 end

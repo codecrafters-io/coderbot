@@ -10,8 +10,16 @@ class Solver < ApplicationRecord
   validates_presence_of :course_stage_slug
   validates_presence_of :logstream_url
 
+  validates_presence_of :duration_ms, if: :success?
+  validates_presence_of :steps_count, if: :success?
+  validates_presence_of :final_diff, if: :success?
+
   before_validation do
     self.status ||= "not_started"
+  end
+
+  def changed_lines_count
+    final_diff.split("\n").count { |line| line.start_with?("+", "-") }
   end
 
   def course

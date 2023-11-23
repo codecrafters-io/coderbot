@@ -33,7 +33,6 @@ class Steps::AttemptFixStep < Steps::BaseStep
     # There can be text before and after the code block, that's the "explanation"
     self.explanation = result.gsub(/```#{local_repository.language.syntax_highlighting_identifier}\n(.*?)```/m, "")
 
-    Diffy::Diff.default_format = :color
     self.diff = Diffy::Diff.new(current_code, edited_code, context: 2)
 
     logstream.info("Explanation:")

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_22_160449) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_23_054637) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -26,6 +26,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_22_160449) do
     t.string "logstream_url", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "steps_count"
+    t.integer "duration_ms"
+    t.text "final_diff"
   end
 
 end
