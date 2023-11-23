@@ -99,7 +99,7 @@ solvers = submission_dirs.pmap(16) do |submission_dir|
 
   if durations_array.size > 0
     duration_ms_average = durations_array.sum.to_f / durations_array.size
-    mlflow_run.log_metric(finished_counter.value, "avg_duration_ms", duration_ms_average)
+    mlflow_run.log_metric(finished_counter.value, "avg_duration_secs", duration_ms_average / 1000)
   end
 
   mlflow_run.log_artifact(solver_json_path(solver), "results/#{solver.friendly_id}.json")
