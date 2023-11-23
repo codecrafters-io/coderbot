@@ -22,6 +22,8 @@ def solver_logs_path(solver)
   Rails.root.join(solver_dir(solver), "#{solver.friendly_id}.log")
 end
 
+Store.ensure_loaded!
+
 solvers = submission_dirs.pmap(8) do |submission_dir|
   submission_data = JSON.parse(File.read(File.join(submission_dir, "data.json")))
 

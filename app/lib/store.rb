@@ -5,18 +5,10 @@ class Store
 
   def self.ensure_loaded!
     if File.exist?(CACHE_PATH)
-      File.open(CACHE_PATH, File::RDONLY, 0o644) do |f|
-        f.flock(File::LOCK_SH)
-        instance.load_from_file(CACHE_PATH)
-        f.flock(File::LOCK_UN)
-      end
+      instance.load_from_file(CACHE_PATH)
     else
-      File.open(CACHE_PATH, File::RDWR | File::CREAT, 0o644) do |f|
-        f.flock(File::LOCK_EX)
-        instance.fetch_all
-        instance.persist(CACHE_PATH)
-        f.flock(File::LOCK_UN)
-      end
+      instance.fetch_all
+      instance.persist(CACHE_PATH)
     end
   end
 
