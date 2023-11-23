@@ -9,6 +9,9 @@ on:
       dataset_name:
         description: "Dataset name"
         required: true
+      branch_name:
+        description: "Branch name"
+        required: true
 
 # concurrency:
 #   group: ${{ inputs.commit_sha }}-${{ inputs.dataset_name }}
