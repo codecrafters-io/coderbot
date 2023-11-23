@@ -8,6 +8,7 @@ class DatasetValidator
   # Counters
   attr_accessor :finished_counter
   attr_accessor :success_counter
+  attr_accessor :error_counter
 
   # Metrics
   attr_accessor :step_count_readings
@@ -51,7 +52,7 @@ class DatasetValidator
       write_solver_logs!(solver)
       write_solver_data!(solver)
       increment_counters!(solver)
-      update_metrics!(solver)
+      update_readings!(solver)
       log_metrics!
 
       # This doesn't actually work yet
@@ -88,6 +89,7 @@ class DatasetValidator
   def increment_counters!(solver)
     finished_counter.increment
     success_counter.increment if solver.status == "success"
+    error_counter.increment if solver.status == "error"
   end
 
   def init_counters!
@@ -124,6 +126,9 @@ class DatasetValidator
   def log_metrics!
     success_rate = (success_counter.value.to_f / finished_counter.value) * 100
     mlflow_run.log_metric(finished_counter.value, "success_rate", success_rate)
+
+    error_rate = (error_counter.value.to_f / finished_counter.value) * 100
+    mlflow_run.log_metric(finished_counter.value, "error_rate", error_rate)
 
     if step_count_readings.size > 0
       step_counts_average = step_count_readings.sum.to_f / step_count_readings.size
@@ -181,7 +186,7 @@ class DatasetValidator
     Dir.glob("#{dataset_dir}/*").sort
   end
 
-  def update_metrics!(solver)
+  def update_readings!(solver)
     if solver.status == "success"
       step_count_readings.concat([solver.steps_count])
       diff_size_readings.concat([solver.changed_lines_count])
