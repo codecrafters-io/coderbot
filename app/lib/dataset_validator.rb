@@ -95,6 +95,7 @@ class DatasetValidator
   def init_counters!
     self.finished_counter = Concurrent::AtomicFixnum.new(0)
     self.success_counter = Concurrent::AtomicFixnum.new(0)
+    self.error_counter = Concurrent::AtomicFixnum.new(0)
   end
 
   def init_metrics!
