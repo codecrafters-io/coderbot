@@ -112,3 +112,6 @@ gem "concurrent-ruby"
 
 # Mustache templating
 gem "mustache"
+
+# Print tables in the terminal
+gem "terminal-table"

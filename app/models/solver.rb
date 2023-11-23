@@ -33,6 +33,10 @@ class Solver < ApplicationRecord
     course.stages.detect { |stage| stage.slug == course_stage_slug } || raise(ActiveRecord::RecordNotFound)
   end
 
+  def duration_secs
+    (duration_ms.to_f / 1000.0).round(2)
+  end
+
   def friendly_id
     @friendly_id ||= FriendlyIdGenerator.generate(Integer(last_successful_submission_commit_sha, 16))
   end
