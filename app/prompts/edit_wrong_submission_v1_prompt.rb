@@ -6,7 +6,7 @@ class EditWrongSubmissionV1Prompt < BasePrompt
     context.result = chat(
       [{role: "user", content: user_message(context.stage, context.language, context.original_code, context.test_runner_output)}],
       seed: context.seed,
-      should_stream: false
+      should_stream: ENV["DEBUG"].eql?("true")
     )
   end
 
@@ -16,7 +16,7 @@ class EditWrongSubmissionV1Prompt < BasePrompt
     <<~PROMPT
       You are a brilliant and meticulous engineer assigned to write code to pass stage #{stage.position} of the "#{stage.course.name}" programming course.
 
-      The description of the course is below:
+      The description of the course is below delimited by "--- DESCRIPTION START ---" and "--- DESCRIPTION END ---":
 
       --- DESCRIPTION START ---
 
@@ -24,13 +24,27 @@ class EditWrongSubmissionV1Prompt < BasePrompt
 
       --- DESCRIPTION END ---
 
-      The course has multiple stages, and the current stage is "#{stage.name}". The instructions for this stage are below:
+      The course has multiple stages, the previous stage was stage "#{stage.previous_stage.name}" and the current stage is stage "#{stage.name}".
 
-      --- INSTRUCTIONS START ---
+      The instructions for the previous stage are in markdown below delimited by "--- PREVIOUS STAGE INSTRUCTIONS START ---" and "--- PREVIOUS STAGE INSTRUCTIONS END ---":
 
-      #{stage.description_markdown_template}
+      --- PREVIOUS STAGE INSTRUCTIONS START ---
 
-      --- INSTRUCTIONS END ---
+      # Stage: #{stage.previous_stage.name}
+
+      #{stage.previous_stage.description_markdown_for_language(language)}
+
+      --- PREVIOUS STAGE INSTRUCTIONS END ---
+
+      The instructions for the current stage are in markdown below delimited by "--- CURRENT STAGE INSTRUCTIONS START ---" and "--- CURRENT STAGE INSTRUCTIONS END ---":
+
+      --- CURRENT STAGE INSTRUCTIONS START ---
+
+      # Stage: #{stage.name}
+
+      #{stage.description_markdown_for_language(language)}
+
+      --- CURRENT STAGE INSTRUCTIONS END ---
 
       The user is asking you to help them edit their code to pass this stage. The user's code is listed below delimited by triple backticks:
 

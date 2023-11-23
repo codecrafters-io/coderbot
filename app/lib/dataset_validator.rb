@@ -155,7 +155,7 @@ class DatasetValidator
   end
 
   def submission_dirs_in_dataset
-    Dir.glob("#{dataset_dir}/*")
+    Dir.glob("#{dataset_dir}/*").sort
   end
 
   def update_metrics!(solver)
