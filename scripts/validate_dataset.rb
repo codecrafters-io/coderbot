@@ -39,7 +39,7 @@ mlflow_run.log_param("commit", `git rev-parse HEAD`.strip)
 step_counter = Concurrent::AtomicFixnum.new(0)
 success_counter = Concurrent::AtomicFixnum.new(0)
 
-solvers = submission_dirs.pmap(8) do |submission_dir|
+solvers = submission_dirs.pmap(16) do |submission_dir|
   submission_data = JSON.parse(File.read(File.join(submission_dir, "data.json")))
 
   # Sanity check
