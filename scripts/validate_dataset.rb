@@ -80,6 +80,8 @@ solvers = submission_dirs.pmap(16) do |submission_dir|
   # TODO: Also log step count?
   success_rate = (success_counter.value.to_f / step_counter.value) * 100
   mlflow_run.log_metric(step_counter.value, "success_rate", success_rate)
+  mlflow_run.log_artifact(solver_json_path(solver), "results/#{solver.friendly_id}.json")
+  mlflow_run.log_artifact(solver_logs_path(solver), "logs/#{solver.friendly_id}.log")
 
   solver
 end

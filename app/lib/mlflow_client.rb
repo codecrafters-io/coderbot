@@ -82,6 +82,16 @@ class MlflowClient
     })
   end
 
+  def upload_artifact(local_path, artifact_uri, artifact_path)
+    HTTParty.post("#{BASE_URL}/api/2.0/dbfs/put", {
+      headers: headers,
+      body: {
+        path: "#{artifact_uri}/#{artifact_path}",
+        contents: File.open(local_path)
+      }
+    })
+  end
+
   protected
 
   def headers

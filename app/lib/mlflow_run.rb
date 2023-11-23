@@ -18,6 +18,10 @@ class MlflowRun
     MlflowClient.new.update_run(run_id, "FINISHED")
   end
 
+  def log_artifact(local_path, artifact_path)
+    MlflowClient.new.upload_artifact(local_path, artifact_uri, artifact_path)
+  end
+
   def log_dataset(name:, profile:, digest: "unknown", source_type: "internal", source: "codecrafters", schema: "zip")
     MlflowClient.new.log_test_dataset(run_id, name, digest, profile, source_type, source, schema)
   end
