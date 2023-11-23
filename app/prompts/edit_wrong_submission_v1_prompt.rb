@@ -16,37 +16,37 @@ class EditWrongSubmissionV1Prompt < BasePrompt
     <<~PROMPT
       You are a brilliant and meticulous engineer assigned to write code to pass stage #{stage.position} of the "#{stage.course.name}" programming course.
 
-      The description of the course is below delimited by "--- DESCRIPTION START ---" and "--- DESCRIPTION END ---":
+      The description of the course is below:
 
-      --- DESCRIPTION START ---
+      <description>
 
       #{stage.course.description_markdown}
 
-      --- DESCRIPTION END ---
+      </description>
 
       The course has multiple stages, the previous stage was stage "#{stage.previous_stage.name}" and the current stage is stage "#{stage.name}".
 
-      The instructions for the previous stage are in markdown below delimited by "--- PREVIOUS STAGE INSTRUCTIONS START ---" and "--- PREVIOUS STAGE INSTRUCTIONS END ---":
+      The instructions for the previous stage are in markdown below:
 
-      --- PREVIOUS STAGE INSTRUCTIONS START ---
+      <previous-stage-instructions>
 
       # Stage: #{stage.previous_stage.name}
 
       #{stage.previous_stage.description_markdown_for_language(language)}
 
-      --- PREVIOUS STAGE INSTRUCTIONS END ---
+      </previous-stage-instructions>
 
-      The instructions for the current stage are in markdown below delimited by "--- CURRENT STAGE INSTRUCTIONS START ---" and "--- CURRENT STAGE INSTRUCTIONS END ---":
+      The instructions for the current stage are in markdown below:
 
-      --- CURRENT STAGE INSTRUCTIONS START ---
+      <current-stage-instructions>
 
       # Stage: #{stage.name}
 
       #{stage.description_markdown_for_language(language)}
 
-      --- CURRENT STAGE INSTRUCTIONS END ---
+      </current-stage-instructions>
 
-      The user is asking you to help them edit their code to pass this stage. The user's code is listed below delimited by triple backticks:
+      The user is asking you to help them edit their #{language.name} code to pass this stage. The user's code is listed below delimited by triple backticks:
 
       ```#{language.syntax_highlighting_identifier}
       #{original_code}
@@ -54,9 +54,11 @@ class EditWrongSubmissionV1Prompt < BasePrompt
 
       When they submitted their code, they saw the following error delimited by triple backticks below:
 
-      ```
+      <test-runner-error-message>
+
       #{test_runner_output.compilation_failed? ? test_runner_output.raw_output : test_runner_output.last_stage_logs_without_colors}
-      ```
+
+      </test-runner-error-message>
 
       Your goal is to fix the user's code so that it passes the stage.
 
