@@ -14,6 +14,9 @@ class Solver < ApplicationRecord
   validates_presence_of :steps_count, if: :success?
   validates_presence_of :final_diff, if: :success?
 
+  validates_presence_of :course
+  validates_presence_of :course_stage
+
   before_validation do
     self.status ||= "not_started"
   end

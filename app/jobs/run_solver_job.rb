@@ -7,6 +7,10 @@ class RunSolverJob < ApplicationJob
       solver.started!
     end
 
+    # Use this to short-circuit the solver
+    # solver.failure!
+    # return
+
     workflow = Workflows::SolveWorkflow.new(solver: solver)
     workflow.run!
 
@@ -19,5 +23,7 @@ class RunSolverJob < ApplicationJob
     puts e.backtrace.reverse.join("\n")
     puts "Error: #{e.message}"
     solver.error!
+  ensure
+    solver.logstream.terminate!
   end
 end
