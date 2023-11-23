@@ -4,19 +4,13 @@ download_datasets:
 	scripts/download_dataset.sh coderbot_dataset_140
 
 test_small:
-	gh workflow run test-dataset.yml -F commit_sha=$(shell git rev-parse HEAD) -F dataset_name=coderbot_dataset_7
-	sleep 1
-	echo $(shell gh run list --workflow=test-dataset.yml --json url | jq -r ".[0].url")
+	scripts/trigger_gh_workflow.sh coderbot_dataset_7
 
 test_medium:
-	gh workflow run test-dataset.yml -F commit_sha=$(shell git rev-parse HEAD) -F dataset_name=coderbot_dataset_35
-	sleep 1
-	echo $(shell gh run list --workflow=test-dataset.yml --json url | jq -r ".[0].url")
+	scripts/trigger_gh_workflow.sh coderbot_dataset_35
 
 test_large:
-	gh workflow run test-dataset.yml -F commit_sha=$(shell git rev-parse HEAD) -F dataset_name=coderbot_dataset_140
-	sleep 1
-	echo $(shell gh run list --workflow=test-dataset.yml --json url | jq -r ".[0].url")k
+	scripts/trigger_gh_workflow.sh coderbot_dataset_140
 
 local_test_small:
 	bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/coderbot_dataset_7
