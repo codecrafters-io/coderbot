@@ -28,13 +28,13 @@ Store.ensure_loaded!
 
 mlflow_run = MlflowRun.create!
 
-mlflow_run.log_test_dataset(
+mlflow_run.log_dataset(
   name: File.basename(dataset_dir),
   profile: "#{submission_dirs} entries"
 )
 
-solvers_count = submission_dirs.count
-counter = Concurrent::AtomicFixnum.new(0)
+step_counter = Concurrent::AtomicFixnum.new(0)
+success_counter = Concurrent::AtomicFixnum.new(0)
 
 solvers = submission_dirs.pmap(8) do |submission_dir|
   submission_data = JSON.parse(File.read(File.join(submission_dir, "data.json")))
@@ -71,14 +71,17 @@ solvers = submission_dirs.pmap(8) do |submission_dir|
     }.to_json
   )
 
-  counter.increment
+  step_counter.increment
+  success_counter.increment if solver.status == "success"
 
   # TODO: Also log step count?
-  success_rate = (solvers.count { |solver| solver.status == "success" }.to_f / counter.value * 100).round(2)
-  mlflow_run.log_metric(counter.value, "success_rate", success_rate)
+  success_rate = (success_counter.value.to_f / step_counter.value) * 100
+  mlflow_run.log_metric(step_counter.value, "success_rate", success_rate)
 
   solver
 end
+
+mlflow_run.finish!
 
 puts "Results written to #{RESULTS_DIR}"
 

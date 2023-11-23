@@ -8,8 +8,12 @@ class MlflowRun
   end
 
   def self.create!
-    run_id = MlflowClient.create_run({environment: ENV["CI"] ? "ci" : "local"})
+    run_id = MlflowClient.new.create_run({environment: ENV["CI"] ? "ci" : "local"})
     MlflowRun.new(run_id: run_id)
+  end
+
+  def finish!
+    MlflowClient.new.update_run(run_id, "FINISHED")
   end
 
   def log_dataset(name:, profile:, digest: "unknown", source_type: "internal", source: "codecrafters", schema: "zip")
