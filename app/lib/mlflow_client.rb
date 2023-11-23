@@ -83,10 +83,12 @@ class MlflowClient
   end
 
   def upload_artifact(local_path, artifact_uri, artifact_path)
+    absolute_dbfs_path = "#{artifact_uri.sub("dbfs:", "").sub(/^\/databricks/, "")}/#{artifact_path}"
+
     HTTParty.post("#{BASE_URL}/api/2.0/dbfs/put", {
       headers: headers,
       body: {
-        path: "#{artifact_uri}/#{artifact_path}",
+        path: absolute_dbfs_path,
         contents: File.open(local_path)
       }
     })
