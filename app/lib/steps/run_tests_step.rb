@@ -21,6 +21,12 @@ class Steps::RunTestsStep < Steps::BaseStep
     logstream.append(test_runner_output.raw_output)
     logstream.append("\n\n")
 
+    if ENV["DEBUG"].eql?("true")
+      puts ""
+      puts test_runner_output.raw_output
+      puts ""
+    end
+
     if test_runner_output.passed?
       success!
       logstream.success("Tests passed!")

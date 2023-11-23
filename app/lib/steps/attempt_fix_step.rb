@@ -45,6 +45,13 @@ class Steps::AttemptFixStep < Steps::BaseStep
     logstream.append(diff.to_s(:color))
     logstream.info("")
 
+    if ENV["DEBUG"].eql?("true")
+      puts "Diff:"
+      puts ""
+      puts diff.to_s(:color)
+      puts ""
+    end
+
     File.write(local_repository.code_file_path, edited_code)
 
     success!

@@ -33,6 +33,20 @@ class CourseStage
     Course.find(course_id)
   end
 
+  def description_markdown_for_language(language)
+    variables = {}
+
+    Language.all.each do |l|
+      variables["lang_is_#{l.slug}"] = l.eql?(language)
+    end
+
+    Mustache.render(description_markdown_template, variables)
+  end
+
+  def previous_stage
+    course.stages.sort_by(&:position).take_while { |stage| stage.position < position }.last
+  end
+
   def tester_test_case_json
     {
       slug: slug,

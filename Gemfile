@@ -109,3 +109,6 @@ gem "colorize"
 
 # Concurrent processing
 gem "concurrent-ruby"
+
+# Mustache templating
+gem "mustache"
