@@ -36,8 +36,10 @@ class DatasetValidator
       create_solver_from_submission_data!(submission_dir, submission_data)
     end
 
-    solvers.peach(16) do |solver|
-      TesterDownloader.new(solver.course).download_if_needed
+    course_slugs = solvers.map(&:course_slug).uniq
+
+    course_slugs.peach(16) do |course_slug|
+      TesterDownloader.new(Course.find_by_slug!(course_slug)).download_if_needed
     end
 
     solvers.peach(16) do |solver|
