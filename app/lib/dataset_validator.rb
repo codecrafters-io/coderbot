@@ -55,6 +55,7 @@ class DatasetValidator
 
     finish_mlflow_run!
     write_and_print_aggregate_results!(solvers)
+    print_results_table!(solvers)
   end
 
   protected
@@ -132,6 +133,21 @@ class DatasetValidator
       duration_ms_average = duration_readings.sum.to_f / duration_readings.size
       mlflow_run.log_metric(finished_counter.value, "avg_duration_secs", duration_ms_average / 1000)
     end
+  end
+
+  def print_results_table!(solvers)
+    rows = solvers.map do |solver|
+      [
+        solver.friendly_id,
+        solver.status,
+        solver.changed_lines_count,
+        solver.steps_count,
+        "#{solver.duration_secs}s"
+      ]
+    end
+
+    table = Terminal::Table.new headings: ["ID", "Status", "Diff size", "Steps count", "Duration"], rows: rows
+    puts table
   end
 
   def relative_solver_logs_path(solver)
