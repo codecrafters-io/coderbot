@@ -71,6 +71,7 @@ class EditWrongSubmissionV1Prompt < BasePrompt
       * Keep your changes minimal. Only make minor edits, don't rewrite large portions of the code.
       * Write production-quality code. Don't leave in any commented-out code or unused variables.
       * Don't change existing comments unless they're incorrect or outdated.
+      * Don't add comments to your code.
       * IMPORTANT: Print the FULL contents of the edited file delimited by triple backticks. Don't print partial contents of the file.
     PROMPT
   end
