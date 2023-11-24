@@ -22,7 +22,7 @@ class RunSolverJob < ApplicationJob
   rescue => e
     puts e.backtrace.reverse.join("\n")
     puts "Error: #{e.message}"
-    solver.error!
+    solver.update!(error_message: e.message, status: "error")
   ensure
     solver.logstream.terminate!
   end

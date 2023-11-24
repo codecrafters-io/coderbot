@@ -32,6 +32,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
         run_tests_step.run!
 
         if run_tests_step.success?
+          raise "test passed on first try (#{solver.course_slug}/#{solver.language_slug})" if counter == 1
           success!
 
           break

@@ -155,11 +155,12 @@ class DatasetValidator
         solver.status,
         solver.status.eql?("success") ? solver.changed_lines_count : "-",
         solver.status.eql?("success") ? solver.steps_count : "-",
-        solver.status.eql?("success") ? "#{solver.duration_secs}s" : "-"
+        solver.status.eql?("success") ? "#{solver.duration_secs}s" : "-",
+        solver.status.eql?("error") ? solver.error_message : "-"
       ]
     end
 
-    table = Terminal::Table.new headings: ["ID", "Course/Lang", "Status", "Diff size", "Steps count", "Duration"], rows: rows
+    table = Terminal::Table.new headings: ["ID", "Course/Lang", "Status", "Diff size", "Steps count", "Duration", "Notes"], rows: rows
     puts table
   end
 

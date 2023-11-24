@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_23_054637) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_24_000220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_23_054637) do
     t.integer "steps_count"
     t.integer "duration_ms"
     t.text "final_diff"
+    t.string "error_message"
   end
 
 end
