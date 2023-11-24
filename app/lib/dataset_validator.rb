@@ -44,7 +44,7 @@ class DatasetValidator
     end
 
     solvers.peach(16) do |solver|
-      puts "Validating #{solver.friendly_id}"
+      puts "Validating #{solver.friendly_id} (#{solver.course_slug}/#{solver.language_slug}})"
 
       RunSolverJob.perform_now(solver)
 

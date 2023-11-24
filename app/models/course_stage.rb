@@ -40,6 +40,8 @@ class CourseStage
       variables["lang_is_#{l.slug}"] = l.eql?(language)
     end
 
+    variables["reader_is_bot"] = true
+
     Mustache.render(description_markdown_template, variables)
   end
 
