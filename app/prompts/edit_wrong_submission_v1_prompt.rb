@@ -1,5 +1,5 @@
 class EditWrongSubmissionV1Prompt < BasePrompt
-  model "gpt-4-1106-preview" # TODO: Change to turbo
+  model "gpt-3.5-turbo-16k" # TODO: Change to turbo
 
   # Context: course, stage, language, original_code, test_runner_output
   def call
