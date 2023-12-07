@@ -66,7 +66,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
       autofix_request.changed_files = [
         {
           diff: Diffy::Diff.new(original_code, final_code).to_s,
-          filename: local_repository.code_file_path
+          filename: local_repository.relative_code_file_path
         }
       ]
 
