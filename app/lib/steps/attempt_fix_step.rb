@@ -42,7 +42,8 @@ class Steps::AttemptFixStep < Steps::BaseStep
     # logstream.info(explanation.presence || "No explanation provided.")
     # logstream.info("")
 
-    logstream.info("Diff:")
+    logstream.info("")
+    logstream.info("Applying diff:")
     logstream.info("")
     logstream.append(diff.to_s(:color))
     logstream.info("")
