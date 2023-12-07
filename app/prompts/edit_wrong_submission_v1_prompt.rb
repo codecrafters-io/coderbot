@@ -3,11 +3,15 @@ class EditWrongSubmissionV1Prompt < BasePrompt
 
   # Context: course, stage, language, original_code, test_runner_output
   def call
+    logstream = BufferedWriter.new(MultiWriter.new(*[ENV["DEBUG"].eql?("true") ? $stdout : nil, context.logstream].compact))
+
     context.result = chat(
       [{role: "user", content: user_message(context.stage, context.language, context.original_code, context.test_runner_output)}],
       seed: context.seed,
-      should_stream: ENV["DEBUG"].eql?("true")
+      logstream: logstream
     )
+
+    logstream.flush
   end
 
   protected

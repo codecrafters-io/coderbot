@@ -26,7 +26,8 @@ class Steps::AttemptFixStep < Steps::BaseStep
       stage: stage,
       language: local_repository.language,
       original_code: current_code,
-      test_runner_output: test_runner_output
+      test_runner_output: test_runner_output,
+      logstream: logstream
     ).result
 
     # There can be multiple code blocks, we want the one that's the longest
@@ -34,12 +35,12 @@ class Steps::AttemptFixStep < Steps::BaseStep
     edited_code = edited_code_candidates.max_by(&:length)
 
     # There can be text before and after the code block, that's the "explanation"
-    self.explanation = result.gsub(/```#{local_repository.language.syntax_highlighting_identifier}\n(.*?)```/m, "")
+    # self.explanation = result.gsub(/```#{local_repository.language.syntax_highlighting_identifier}\n(.*?)```/m, "")
 
     self.diff = Diffy::Diff.new(current_code, edited_code, context: 2)
 
-    logstream.info(explanation.presence || "No explanation provided.")
-    logstream.info("")
+    # logstream.info(explanation.presence || "No explanation provided.")
+    # logstream.info("")
 
     logstream.info("Diff:")
     logstream.info("")

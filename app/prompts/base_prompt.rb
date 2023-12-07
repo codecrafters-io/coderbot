@@ -17,7 +17,7 @@ class BasePrompt
     self.response_format = format.to_sym
   end
 
-  def chat(messages, should_stream: true, **parameters)
+  def chat(messages, logstream: nil, **parameters)
     result = ""
 
     client.chat(
@@ -34,13 +34,14 @@ class BasePrompt
         seed: rand(1000000), # Default, can be overridden using parameters
         stream: proc do |chunk, _bytesize|
           if chunk.dig("choices", 0, "finish_reason") == "stop" # last message
-            print "\n" if should_stream && Rails.env.development?
+            logstream&.write("\n")
+
             next
           end
 
           content = chunk.dig("choices", 0, "delta", "content")
           unless content.nil?
-            print content if should_stream && Rails.env.development?
+            logstream&.write(content)
             result += content
           end
         end,
