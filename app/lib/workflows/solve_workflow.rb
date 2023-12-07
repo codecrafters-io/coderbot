@@ -18,6 +18,12 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
         counter += 1
 
         if counter >= 5
+          autofix_request.explanation_markdown = <<~MARKDOWN
+            We tried to fix your submission, but we failed. Trying again _might_ help.
+
+            You can view the raw logs to see what fixes we tried and what errors we ran into.
+          MARKDOWN
+
           failure!
           break
         end
@@ -33,6 +39,11 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
 
         if run_tests_step.success?
           raise "test passed on first try (#{autofix_request.course_slug}/#{autofix_request.language_slug})" if counter == 1
+
+          autofix_request.explanation_markdown = <<~MARKDOWN
+            The issue with the original submission was XYZ...
+          MARKDOWN
+
           success!
 
           break
