@@ -17,6 +17,9 @@ class Steps::AttemptFixStep < Steps::BaseStep
   end
 
   def do_run!
+    logstream.info("Attempting fix...")
+    logstream.info("")
+
     current_code = File.read(local_repository.code_file_path)
 
     result = EditWrongSubmissionV1Prompt.call(
@@ -35,8 +38,6 @@ class Steps::AttemptFixStep < Steps::BaseStep
 
     self.diff = Diffy::Diff.new(current_code, edited_code, context: 2)
 
-    logstream.info("Explanation:")
-    logstream.info("")
     logstream.info(explanation.presence || "No explanation provided.")
     logstream.info("")
 

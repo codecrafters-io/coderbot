@@ -20,8 +20,8 @@ class Steps::RunTestsStep < Steps::BaseStep
 
     self.test_runner_output = LocalTestRunner.new(stage.course, local_repository.repository_dir).run_tests(stage, stream_output: is_debug?, logstream: logstream)
 
-    logstream.append("\n\n")
-    $stdout.write("\n\n") if is_debug?
+    logstream.append("\n")
+    $stdout.write("\n") if is_debug?
 
     if test_runner_output.passed?
       success!
@@ -30,6 +30,8 @@ class Steps::RunTestsStep < Steps::BaseStep
       failure!
       logstream.error("Tests failed!")
     end
+
+    logstream.append("\n")
   end
 
   def is_debug?
