@@ -82,7 +82,7 @@ class DatasetValidator
   def create_autofix_request_from_submission_data!(submission_dir, submission_data)
     id = SecureRandom.uuid
 
-    autofix_request.create!(
+    AutofixRequest.create!(
       id: id,
       course_slug: submission_data.fetch("course_slug"),
       course_stage_slug: submission_data.fetch("course_stage_slug"),

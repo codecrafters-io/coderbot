@@ -12,7 +12,7 @@ class AutofixRequest < ApplicationRecord
 
   validates_presence_of :duration_ms, if: :success?
   validates_presence_of :steps_count, if: :success?
-  validates_presence_of :final_diff, if: :success?
+  validates_presence_of :changed_files, if: :success?
 
   validates_presence_of :course
   validates_presence_of :course_stage
@@ -22,7 +22,9 @@ class AutofixRequest < ApplicationRecord
   end
 
   def changed_lines_count
-    final_diff.split("\n").count { |line| line.start_with?("+", "-") }
+    changed_files.map do |changed_file|
+      changed_file["diff"].split("\n").count { |line| line.start_with?("+", "-") }
+    end.sum
   end
 
   def course
