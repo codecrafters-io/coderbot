@@ -27,6 +27,10 @@ class Logstream
     @redis.xadd(@stream_key, {event_type: "log", bytes: message})
   end
 
+  def write(message)
+    append(message)
+  end
+
   def read
     result = ""
 

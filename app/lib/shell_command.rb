@@ -16,7 +16,7 @@ class ShellCommand
     new(command).run!(**)
   end
 
-  def run(stream_output: false, summarize: false)
+  def run(stream_output: false, summarize: false, logstream: nil)
     summarize_writer = PrefixedLineWriter.new(ANSI.yellow("[shell_command] "), $stderr)
     summarize_writer.write "#{command}\n" if summarize
 
@@ -28,13 +28,20 @@ class ShellCommand
 
     io_threads = []
 
-    if stream_output
-      io_threads << Thread.new { setup_io_relay(stdout_io, $stdout, stdout_captured) }
-      io_threads << Thread.new { setup_io_relay(stderr_io, $stderr, stderr_captured) }
+    prefixed_destinations = if stream_output
+      [[$stdout], [$stderr]]
     else
-      io_threads << Thread.new { setup_io_relay(stdout_io, File.open(File::NULL, "w"), stdout_captured) }
-      io_threads << Thread.new { setup_io_relay(stderr_io, File.open(File::NULL, "w"), stderr_captured) }
+      [[File.open(File::NULL, "w")], [File.open(File::NULL, "w")]]
     end
+
+    raw_destinations = if logstream
+      [[stdout_captured, logstream], [stderr_captured, logstream]]
+    else
+      [[stdout_captured], [stderr_captured]]
+    end
+
+    io_threads << Thread.new { setup_io_relay(stdout_io, prefixed_destinations[0], raw_destinations[0]) }
+    io_threads << Thread.new { setup_io_relay(stderr_io, prefixed_destinations[1], raw_destinations[1]) }
 
     exit_code = wait_thr.value.exitstatus
     io_threads.each(&:join)
@@ -70,12 +77,12 @@ class ShellCommand
 
   protected
 
-  def setup_io_relay(source, prefixed_destination, other_destination)
+  def setup_io_relay(source, prefixed_destinations, raw_destinations)
     IO.copy_stream(
       source,
       MultiWriter.new(
-        PrefixedLineWriter.new("     ", prefixed_destination),
-        other_destination
+        *prefixed_destinations.map { |destination| PrefixedLineWriter.new("     ", destination) },
+        *raw_destinations.map { |destination| destination }
       )
     )
   end
