@@ -17,17 +17,6 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
       loop do
         counter += 1
 
-        if counter >= 5
-          autofix_request.explanation_markdown = <<~MARKDOWN
-            We tried to fix your submission, but we failed. Trying again _might_ help.
-
-            You can view the raw logs to see what fixes we tried and what errors we ran into.
-          MARKDOWN
-
-          failure!
-          break
-        end
-
         run_tests_step = Steps::RunTestsStep.new(
           workflow: self,
           stage: autofix_request.course_stage,
@@ -46,6 +35,17 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
 
           success!
 
+          break
+        end
+
+        if counter >= 5
+          autofix_request.explanation_markdown = <<~MARKDOWN
+            We tried to fix your submission, but we failed. Trying again _might_ help.
+
+            You can view the raw logs to see what fixes we tried and what errors we ran into.
+          MARKDOWN
+
+          failure!
           break
         end
 
