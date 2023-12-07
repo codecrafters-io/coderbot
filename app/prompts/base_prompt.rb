@@ -39,8 +39,10 @@ class BasePrompt
           end
 
           content = chunk.dig("choices", 0, "delta", "content")
-          print content if should_stream && Rails.env.development?
-          result += content
+          unless content.nil?
+            print content if should_stream && Rails.env.development?
+            result += content
+          end
         end,
         **parameters
       }
@@ -55,14 +57,18 @@ class BasePrompt
 
   def client
     @client ||= OpenAI::Client.new(
-      access_token: ENV["OPENAI_API_KEY"],
-      uri_base: "https://oai.hconeai.com/",
+      access_token: ENV.fetch("AZURE_OPENAI_API_KEY"),
+      uri_base: "https://oai.hconeai.com/openai/deployments/gpt-4-1106-preview",
       request_timeout: 240,
       extra_headers: {
-        "Helicone-Auth": "Bearer #{ENV["HELICONE_API_KEY"]}",
+        "api-key": ENV.fetch("AZURE_OPENAI_API_KEY"),
+        "Helicone-Auth": "Bearer #{ENV.fetch("HELICONE_API_KEY")}",
+        "Helicone-OpenAI-Api-Base": ENV.fetch("AZURE_OPENAI_ENDPOINT"),
         "Helicone-Property-Prompt": self.class.name,
         "helicone-stream-force-format": "true"
-      }
+      },
+      api_type: :azure,
+      api_version: "2023-03-15-preview"
     )
   end
 end
