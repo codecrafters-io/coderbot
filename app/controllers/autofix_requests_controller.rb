@@ -16,4 +16,15 @@ class AutofixRequestsController < ApplicationController
 
     render json: {id: autofix_request.id, status: autofix_request.status}
   end
+
+  def show
+    autofix_request = AutofixRequest.find(params[:id])
+
+    render json: {
+      id: autofix_request.id,
+      explanation_markdown: autofix_request.explanation_markdown,
+      status: autofix_request.status,
+      changed_files: autofix_request.changed_files
+    }
+  end
 end

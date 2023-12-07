@@ -1,7 +1,7 @@
 require "test_helper"
 
 class AutofixRequestsControllerTest < ActionDispatch::IntegrationTest
-  test "POST /autofix_requests should create request" do
+  test "can create & fetch autofix_requests" do
     Store.ensure_loaded!
 
     post "/autofix_requests", params: {
@@ -18,5 +18,17 @@ class AutofixRequestsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal 1, AutofixRequest.count
+
+    get "/autofix_requests/#{AutofixRequest.first.id}"
+
+    assert_response :success
+    assert_equal "not_started", JSON.parse(response.body)["status"]
+
+    perform_enqueued_jobs
+
+    get "/autofix_requests/#{AutofixRequest.first.id}"
+
+    assert_response :success
+    assert_equal "error", JSON.parse(response.body)["status"]
   end
 end
