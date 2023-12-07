@@ -87,7 +87,7 @@ class DatasetValidator
       course_slug: submission_data.fetch("course_slug"),
       course_stage_slug: submission_data.fetch("course_stage_slug"),
       language_slug: submission_data.fetch("language_slug"),
-      last_submission_commit_sha: submission_data.fetch("submission_commit_sha"),
+      submission_commit_sha: submission_data.fetch("submission_commit_sha"),
       last_successful_submission_commit_sha: submission_data.fetch("last_successful_submission_commit_sha"),
       logstream_url: "redis://localhost:6911/#{id}",
       repository_clone_url: "file:///#{submission_dir}/code"

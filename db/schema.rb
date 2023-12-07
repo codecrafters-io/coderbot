@@ -18,7 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_162358) do
   create_table "autofix_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "status", null: false
     t.string "repository_clone_url", null: false
-    t.string "last_submission_commit_sha", null: false
+    t.string "submission_commit_sha", null: false
     t.string "last_successful_submission_commit_sha"
     t.string "language_slug", null: false
     t.string "course_slug", null: false
@@ -30,6 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_162358) do
     t.integer "duration_ms"
     t.text "final_diff"
     t.string "error_message"
+    t.string "codecrafters_server_url"
   end
 
 end
