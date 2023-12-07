@@ -1,15 +1,15 @@
 class Workflows::SolveWorkflow < Workflows::BaseWorkflow
-  attr_accessor :solver
+  attr_accessor :autofix_request
 
-  def initialize(solver:)
+  def initialize(autofix_request:)
     super()
 
-    @solver = solver
-    @identifier = solver.friendly_id
+    @autofix_request = autofix_request
+    @identifier = autofix_request.friendly_id
   end
 
   def do_run!
-    solver.with_cloned_repository do |local_repository|
+    autofix_request.with_cloned_repository do |local_repository|
       started_at = Time.now
       original_code = File.read(local_repository.code_file_path)
       counter = 0
@@ -24,15 +24,15 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
 
         run_tests_step = Steps::RunTestsStep.new(
           workflow: self,
-          stage: solver.course_stage,
+          stage: autofix_request.course_stage,
           local_repository: local_repository,
-          logstream: solver.logstream
+          logstream: autofix_request.logstream
         )
 
         run_tests_step.run!
 
         if run_tests_step.success?
-          raise "test passed on first try (#{solver.course_slug}/#{solver.language_slug})" if counter == 1
+          raise "test passed on first try (#{autofix_request.course_slug}/#{autofix_request.language_slug})" if counter == 1
           success!
 
           break
@@ -40,10 +40,10 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
 
         attempt_fix_step = Steps::AttemptFixStep.new(
           workflow: self,
-          stage: solver.course_stage,
+          stage: autofix_request.course_stage,
           local_repository: local_repository,
           test_runner_output: run_tests_step.test_runner_output,
-          logstream: solver.logstream
+          logstream: autofix_request.logstream
         )
 
         attempt_fix_step.run!
@@ -52,10 +52,10 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
       ended_at = Time.now
       final_code = File.read(local_repository.code_file_path)
 
-      solver.final_diff = Diffy::Diff.new(original_code, final_code).to_s
-      solver.steps_count = counter
-      solver.duration_ms = (ended_at - started_at) * 1000
-      solver.save!
+      autofix_request.final_diff = Diffy::Diff.new(original_code, final_code).to_s
+      autofix_request.steps_count = counter
+      autofix_request.duration_ms = (ended_at - started_at) * 1000
+      autofix_request.save!
     end
   end
 end

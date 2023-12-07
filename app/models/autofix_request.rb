@@ -1,5 +1,5 @@
-class Solver < ApplicationRecord
-  ALL_STATUSES = %w[not_started started failure success error].freeze
+class AutofixRequest < ApplicationRecord
+  ALL_STATUSES = %w[not_started in_progress failure success error].freeze
 
   enum status: ALL_STATUSES.zip(ALL_STATUSES).to_h
 

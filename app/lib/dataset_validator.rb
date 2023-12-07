@@ -32,45 +32,57 @@ class DatasetValidator
     init_counters!
     init_metrics!
 
-    solvers = submission_dirs.pmap(16) do |submission_dir|
+    autofix_requests = submission_dirs.pmap(16) do |submission_dir|
       submission_data = JSON.parse(File.read(File.join(submission_dir, "data.json")))
-      create_solver_from_submission_data!(submission_dir, submission_data)
+      create_autofix_request_from_submission_data!(submission_dir, submission_data)
     end
 
-    course_slugs = solvers.map(&:course_slug).uniq
+    course_slugs = autofix_requests.map(&:course_slug).uniq
 
     course_slugs.peach(16) do |course_slug|
       TesterDownloader.new(Course.find_by_slug!(course_slug)).download_if_needed
     end
 
-    solvers.peach(16) do |solver|
-      puts "Validating #{solver.friendly_id} (#{solver.course_slug}/#{solver.language_slug}})"
+    autofix_requests.peach(16) do |autofix_request|
+      puts "Validating #{autofix_request.friendly_id} (#{autofix_request.course_slug}/#{autofix_request.language_slug}})"
 
-      RunSolverJob.perform_now(solver)
+      ProcessAutofixRequestJob.perform_now(autofix_request)
 
-      FileUtils.mkdir_p(solver_dir(solver))
-      write_solver_logs!(solver)
-      write_solver_data!(solver)
-      increment_counters!(solver)
-      update_readings!(solver)
+      FileUtils.mkdir_p(autofix_request_dir(autofix_request))
+      write_autofix_request_logs!(autofix_request)
+      write_autofix_request_data!(autofix_request)
+      increment_counters!(autofix_request)
+      update_readings!(autofix_request)
       log_metrics!
 
       # This doesn't actually work yet
-      mlflow_run.log_artifact(solver_json_path(solver), "results/#{solver.friendly_id}.json")
-      mlflow_run.log_artifact(solver_logs_path(solver), "logs/#{solver.friendly_id}.log")
+      mlflow_run.log_artifact(autofix_request_json_path(autofix_request), "results/#{autofix_request.friendly_id}.json")
+      mlflow_run.log_artifact(autofix_request_logs_path(autofix_request), "logs/#{autofix_request.friendly_id}.log")
     end
 
     finish_mlflow_run!
-    write_and_print_aggregate_results!(solvers)
-    print_results_table!(solvers)
+    write_and_print_aggregate_results!(autofix_requests)
+    print_results_table!(autofix_requests)
   end
 
   protected
 
-  def create_solver_from_submission_data!(submission_dir, submission_data)
+  def autofix_request_dir(autofix_request)
+    File.join(results_dir, autofix_request.status)
+  end
+
+  def autofix_request_json_path(autofix_request)
+    File.join(autofix_request_dir(autofix_request), "#{autofix_request.friendly_id}.json")
+  end
+
+  def autofix_request_logs_path(autofix_request)
+    File.join(autofix_request_dir(autofix_request), "#{autofix_request.friendly_id}.log")
+  end
+
+  def create_autofix_request_from_submission_data!(submission_dir, submission_data)
     id = SecureRandom.uuid
 
-    Solver.create!(
+    autofix_request.create!(
       id: id,
       course_slug: submission_data.fetch("course_slug"),
       course_stage_slug: submission_data.fetch("course_stage_slug"),
@@ -86,10 +98,10 @@ class DatasetValidator
     mlflow_run.finish!
   end
 
-  def increment_counters!(solver)
+  def increment_counters!(autofix_request)
     finished_counter.increment
-    success_counter.increment if solver.status == "success"
-    error_counter.increment if solver.status == "error"
+    success_counter.increment if autofix_request.status == "success"
+    error_counter.increment if autofix_request.status == "error"
   end
 
   def init_counters!
@@ -147,16 +159,16 @@ class DatasetValidator
     end
   end
 
-  def print_results_table!(solvers)
-    rows = solvers.map do |solver|
+  def print_results_table!(autofix_requests)
+    rows = autofix_requests.map do |autofix_request|
       [
-        solver.friendly_id,
-        "#{solver.course_slug}/#{solver.language_slug}",
-        solver.status,
-        solver.status.eql?("success") ? solver.changed_lines_count : "-",
-        solver.status.eql?("success") ? solver.steps_count : "-",
-        solver.status.eql?("success") ? "#{solver.duration_secs}s" : "-",
-        solver.status.eql?("error") ? solver.error_message : "-"
+        autofix_request.friendly_id,
+        "#{autofix_request.course_slug}/#{autofix_request.language_slug}",
+        autofix_request.status,
+        autofix_request.status.eql?("success") ? autofix_request.changed_lines_count : "-",
+        autofix_request.status.eql?("success") ? autofix_request.steps_count : "-",
+        autofix_request.status.eql?("success") ? "#{autofix_request.duration_secs}s" : "-",
+        autofix_request.status.eql?("error") ? autofix_request.error_message : "-"
       ]
     end
 
@@ -164,59 +176,47 @@ class DatasetValidator
     puts table
   end
 
-  def relative_solver_logs_path(solver)
-    Pathname.new(solver_logs_path(solver)).relative_path_from(Rails.root)
+  def relative_autofix_request_logs_path(autofix_request)
+    Pathname.new(autofix_request_logs_path(autofix_request)).relative_path_from(Rails.root)
   end
 
   def results_dir
     @results_dir ||= Rails.root.join("tmp", "dataset_validations_results", "#{File.basename(dataset_dir)}-#{Time.now.iso8601[0..18].tr(":", ".")}")
   end
 
-  def solver_dir(solver)
-    File.join(results_dir, solver.status)
-  end
-
-  def solver_json_path(solver)
-    File.join(solver_dir(solver), "#{solver.friendly_id}.json")
-  end
-
-  def solver_logs_path(solver)
-    File.join(solver_dir(solver), "#{solver.friendly_id}.log")
-  end
-
   def submission_dirs_in_dataset
     Dir.glob("#{dataset_dir}/*").sort
   end
 
-  def update_readings!(solver)
-    if solver.status == "success"
-      step_count_readings.concat([solver.steps_count])
-      diff_size_readings.concat([solver.changed_lines_count])
-      duration_readings.concat([solver.duration_ms])
+  def update_readings!(autofix_request)
+    if autofix_request.status == "success"
+      step_count_readings.concat([autofix_request.steps_count])
+      diff_size_readings.concat([autofix_request.changed_lines_count])
+      duration_readings.concat([autofix_request.duration_ms])
     end
   end
 
-  def write_and_print_aggregate_results!(solvers)
+  def write_and_print_aggregate_results!(autofix_requests)
     aggregate_results_file_path = File.join(results_dir, "aggregate_results.json")
 
     aggregate_results = {
-      "total" => solvers.count,
-      "success" => solvers.count { |solver| solver.status == "success" },
-      "failure" => solvers.count { |solver| solver.status == "failure" },
-      "error" => solvers.count { |solver| solver.status == "error" },
-      "success_percentage" => (solvers.count { |solver| solver.status == "success" }.to_f / solvers.count * 100).round(2)
+      "total" => autofix_requests.count,
+      "success" => autofix_requests.count { |autofix_request| autofix_request.status == "success" },
+      "failure" => autofix_requests.count { |autofix_request| autofix_request.status == "failure" },
+      "error" => autofix_requests.count { |autofix_request| autofix_request.status == "error" },
+      "success_percentage" => (autofix_requests.count { |autofix_request| autofix_request.status == "success" }.to_f / autofix_requests.count * 100).round(2)
     }
 
     File.write(aggregate_results_file_path, aggregate_results.to_json)
 
     puts "Results written to #{results_dir}"
     puts ""
-    solvers.select { |solver| solver.status == "success" }.each do |solver|
-      puts "Success: #{solver.friendly_id} (#{relative_solver_logs_path(solver)})"
+    autofix_requests.select { |autofix_request| autofix_request.status == "success" }.each do |autofix_request|
+      puts "Success: #{autofix_request.friendly_id} (#{relative_autofix_request_logs_path(autofix_request)})"
     end
     puts ""
-    solvers.reject { |solver| solver.status == "success" }.each do |solver|
-      puts "#{solver.status}: #{solver.friendly_id} (#{relative_solver_logs_path(solver)}}"
+    autofix_requests.reject { |autofix_request| autofix_request.status == "success" }.each do |autofix_request|
+      puts "#{autofix_request.status}: #{autofix_request.friendly_id} (#{relative_autofix_request_logs_path(autofix_request)}}"
     end
     puts ""
 
@@ -227,17 +227,17 @@ class DatasetValidator
     puts ""
   end
 
-  def write_solver_data!(solver)
+  def write_autofix_request_data!(autofix_request)
     File.write(
-      solver_json_path(solver),
+      autofix_request_json_path(autofix_request),
       {
-        status: solver.status,
-        duration_ms: solver.duration_ms
+        status: autofix_request.status,
+        duration_ms: autofix_request.duration_ms
       }.to_json
     )
   end
 
-  def write_solver_logs!(solver)
-    File.write(solver_logs_path(solver), solver.logstream.read)
+  def write_autofix_request_logs!(autofix_request)
+    File.write(autofix_request_logs_path(autofix_request), autofix_request.logstream.read)
   end
 end

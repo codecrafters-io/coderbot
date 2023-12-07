@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_24_000220) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_07_162358) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "solvers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "autofix_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "status", null: false
     t.string "repository_clone_url", null: false
     t.string "last_submission_commit_sha", null: false
