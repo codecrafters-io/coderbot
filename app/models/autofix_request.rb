@@ -10,6 +10,8 @@ class AutofixRequest < ApplicationRecord
   validates_presence_of :course_stage_slug
   validates_presence_of :logstream_url
 
+  validates_presence_of :explanation_markdown, if: :finalized?
+
   validates_presence_of :duration_ms, if: :success?
   validates_presence_of :steps_count, if: :success?
   validates_presence_of :changed_files, if: :success?
@@ -39,8 +41,12 @@ class AutofixRequest < ApplicationRecord
     (duration_ms.to_f / 1000.0).round(2)
   end
 
+  def finalized?
+    success? || failure? || error?
+  end
+
   def friendly_id
-    @friendly_id ||= FriendlyIdGenerator.generate(Integer(last_successful_submission_commit_sha, 16))
+    @friendly_id ||= FriendlyIdGenerator.generate(Integer(submission_commit_sha, 16))
   end
 
   def language

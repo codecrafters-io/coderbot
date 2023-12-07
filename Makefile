@@ -3,6 +3,10 @@ download_datasets:
 	scripts/download_dataset.sh coderbot_v2_dataset_35
 	scripts/download_dataset.sh coderbot_v2_dataset_140
 
+serve:
+	docker-compose up -d
+	PORT=5002 bundle exec rails s
+
 test_small:
 	scripts/trigger_gh_workflow.sh coderbot_v2_dataset_7
 

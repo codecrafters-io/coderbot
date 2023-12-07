@@ -22,7 +22,7 @@ class ProcessAutofixRequestJob < ApplicationJob
   rescue => e
     puts e.backtrace.reverse.join("\n")
     puts "Error: #{e.message}"
-    autofix_request.update!(error_message: e.message, status: "error")
+    autofix_request.update!(explanation_markdown: "Autofix ran into an error: ```\n#{e.message}\n```.\n\nTry again? Contact us at hello@codecrafters.io if this persists.", status: "error")
   ensure
     autofix_request.logstream.terminate!
   end

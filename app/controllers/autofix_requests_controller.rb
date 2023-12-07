@@ -1,4 +1,6 @@
 class AutofixRequestsController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def create
     autofix_request = AutofixRequest.create!(
       codecrafters_server_url: params[:codecrafters_server_url],
