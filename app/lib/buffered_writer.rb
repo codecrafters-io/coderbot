@@ -22,7 +22,7 @@ class BufferedWriter
     @flush_thread ||= Thread.new do
       loop do
         if @buffer.any?
-          to_write = @buffer.shift(100)
+          to_write = @buffer.shift(@buffer.size)
           @target.write(to_write.join(""))
         elsif @is_flushing
           # Nothing left in buffer, and we're flushing, so we're done
