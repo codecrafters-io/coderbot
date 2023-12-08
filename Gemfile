@@ -115,3 +115,7 @@ gem "mustache"
 
 # Print tables in the terminal
 gem "terminal-table"
+
+# Error reporting
+gem "sentry-ruby"
+gem "sentry-rails"
