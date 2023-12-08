@@ -14,7 +14,7 @@ class AutofixRequestsController < ApplicationController
       submission_commit_sha: params[:submission_commit_sha]
     )
 
-    # ProcessAutofixRequestJob.perform_later(autofix_request)
+    ProcessAutofixRequestJob.perform_later(autofix_request)
 
     render json: {id: autofix_request.id, status: autofix_request.status}
   end
