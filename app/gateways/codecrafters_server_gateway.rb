@@ -31,4 +31,16 @@ class CodecraftersServerGateway
       status: response.fetch("status")
     }
   end
+
+  def notify_autofix_request_completed(codecrafters_server_url:, autofix_request_id:)
+    response = HTTParty.post(
+      "#{codecrafters_server_url}/services/autofix/autofix_request_completed",
+      body: {autofix_request_id: autofix_request_id}.to_json,
+      headers: {"Content-Type" => "application/json"}
+    )
+
+    unless response.code.eql?(200)
+      raise "Failed to update autofix request. Status code: #{response.code}, body: #{response.body[0..100]}"
+    end
+  end
 end

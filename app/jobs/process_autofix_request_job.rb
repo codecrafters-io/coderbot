@@ -35,6 +35,8 @@ class ProcessAutofixRequestJob < ApplicationJob
 
     autofix_request.update!(status: "error", explanation_markdown: explanation_markdown)
   ensure
-    autofix_request.logstream.terminate!
+    if autofix_request.codecrafters_server_url.present?
+      CodecraftersServerGateway.new.notify_autofix_request_completed(autofix_request_id: autofix_request.id, codecrafters_server_url: autofix_request.codecrafters_server_url)
+    end
   end
 end
