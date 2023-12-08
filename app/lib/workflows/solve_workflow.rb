@@ -61,14 +61,17 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
       end
 
       ended_at = Time.now
-      final_code = File.read(local_repository.code_file_path)
 
-      autofix_request.changed_files = [
-        {
-          diff: Diffy::Diff.new(original_code, final_code).to_s,
-          filename: local_repository.relative_code_file_path
-        }
-      ]
+      if autofix_request.success?
+        final_code = File.read(local_repository.code_file_path)
+
+        autofix_request.changed_files = [
+          {
+            diff: Diffy::Diff.new(original_code, final_code).to_s,
+            filename: local_repository.relative_code_file_path
+          }
+        ]
+      end
 
       autofix_request.steps_count = counter
       autofix_request.duration_ms = (ended_at - started_at) * 1000
