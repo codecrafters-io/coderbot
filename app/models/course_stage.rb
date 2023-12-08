@@ -46,13 +46,16 @@ class CourseStage
   end
 
   def previous_stage
-    course.stages.sort_by(&:position).take_while { |stage| stage.position < position }.last
+    previous_stages.last
+  end
+
+  def previous_stages
+    course.stages.sort_by(&:position).take_while { |stage| stage.position < position }
   end
 
   def tester_test_case_json
     {
-      slug: slug,
-      tester_log_prefix: "stage-#{position}",
+
       title: "Stage #{position}: #{name}"
     }
   end
