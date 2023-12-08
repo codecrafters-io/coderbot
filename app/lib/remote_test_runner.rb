@@ -27,10 +27,14 @@ class RemoteTestRunner
     buffered_logstream_writer = BufferedWriter.new(logstream)
 
     test_run_logstream.each_chunk do |chunk|
+      $stdout.write(chunk) if stream_output
       buffered_logstream_writer.write(chunk)
     end
 
     buffered_logstream_writer.flush
+
+    test_run_status = CodecraftersServerGateway.new.fetch_test_run(codecrafters_server_url: codecrafters_server_ur, test_run_id: test_run.fetch(:id))
+    raise "Unexpected test run status: pending" if test_run_status.fetch(:status).eql?("pending") # TODO: Failsafe, handle this properly
 
     # TODO: Find a way to not rely on exit code?
     TestRunnerOutput.new(ShellCommandResult.new(exit_code: 0, stdout: test_run_logstream.read_available, stderr: ""))

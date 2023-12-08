@@ -24,6 +24,10 @@ class Logstream
     redis_client.xadd(@stream_key, {event_type: "log", bytes: message}, id: "*")
   end
 
+  def write(message)
+    append(message)
+  end
+
   def each_chunk(chunk_timeout: 60.seconds, &block)
     last_seen_id = 0
     disconnect_event_seen = false

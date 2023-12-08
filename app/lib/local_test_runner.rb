@@ -21,8 +21,7 @@ class LocalTestRunner
 
       tester_dir = TesterDownloader.new(course).download_if_needed
 
-      course_stages = Store.instance.models_for(CourseStage).select { |stage| stage.course_id == course.id }
-      stages_to_test = course_stages.select { |s| s.position <= stage.position }
+      stages_to_test = [*stage.previous_stages, stage]
       test_cases_json = stages_to_test.map(&:tester_test_case_json).to_json
 
       run_command = ShellCommand.new([

@@ -18,6 +18,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
         counter += 1
 
         run_tests_step = Steps::RunTestsStep.new(
+          autofix_request: autofix_request,
           workflow: self,
           stage: autofix_request.course_stage,
           local_repository: local_repository,

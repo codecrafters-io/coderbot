@@ -238,6 +238,6 @@ class DatasetValidator
   end
 
   def write_autofix_request_logs!(autofix_request)
-    File.write(autofix_request_logs_path(autofix_request), autofix_request.logstream.read)
+    File.write(autofix_request_logs_path(autofix_request), autofix_request.logstream.read_available)
   end
 end
