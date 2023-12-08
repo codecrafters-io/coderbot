@@ -63,7 +63,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
 
       ended_at = Time.now
 
-      if autofix_request.success?
+      if success?
         final_code = File.read(local_repository.code_file_path)
 
         autofix_request.changed_files = [
