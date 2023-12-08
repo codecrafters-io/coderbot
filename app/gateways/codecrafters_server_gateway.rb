@@ -11,7 +11,7 @@ class CodecraftersServerGateway
     )
 
     unless response.code.eql?(200)
-      raise "Failed to create test run. Status code: #{response.code}, body: #{response.body}"
+      raise "Failed to create test run. Status code: #{response.code}, body: #{response.body[0..100]}"
     end
 
     {
@@ -24,7 +24,7 @@ class CodecraftersServerGateway
     response = HTTParty.get("#{codecrafters_server_url}/services/autofix/fetch_test_run?test_run_id=#{test_run_id}")
 
     unless response.code.eql?(200)
-      raise "Failed to fetch test run. Status code: #{response.code}, body: #{response.body}"
+      raise "Failed to fetch test run. Status code: #{response.code}, body: #{response.body[0..100]}"
     end
 
     {

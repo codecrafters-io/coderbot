@@ -21,10 +21,12 @@ class Steps::RunTestsStep < Steps::BaseStep
     $stdout.write("\n") if is_debug?
 
     self.test_runner_output = if autofix_request.supports_remote_test_run?
+      puts "Running remote test runner"
       RemoteTestRunner
         .new(autofix_request.codecrafters_server_url, local_repository.repository_dir)
         .run_tests(autofix_request.id, stage, stream_output: is_debug?, logstream: logstream)
     else
+      puts "Running local test runner"
       LocalTestRunner
         .new(stage.course, local_repository.repository_dir)
         .run_tests(stage, stream_output: is_debug?, logstream: logstream)

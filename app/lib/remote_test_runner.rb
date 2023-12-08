@@ -11,7 +11,7 @@ class RemoteTestRunner
     commit_sha = Dir.chdir(@repository_dir) do
       ShellCommand.run!("git checkout -b #{branch_name}")
       ShellCommand.run!("git add .")
-      ShellCommand.run!("git commit -m 'Autofix [skip ci]'")
+      ShellCommand.run!("git commit --allow-empty -m 'Autofix [skip ci]'")
       ShellCommand.run!("git push origin #{branch_name}")
       ShellCommand.run!("git rev-parse HEAD").stdout.strip
     end
@@ -33,10 +33,14 @@ class RemoteTestRunner
 
     buffered_logstream_writer.flush
 
-    test_run_status = CodecraftersServerGateway.new.fetch_test_run(codecrafters_server_url: codecrafters_server_ur, test_run_id: test_run.fetch(:id))
+    test_run_status = CodecraftersServerGateway.new.fetch_test_run(
+      codecrafters_server_url: @codecrafters_server_url,
+      test_run_id: test_run.fetch(:id)
+    )
+
     raise "Unexpected test run status: pending" if test_run_status.fetch(:status).eql?("pending") # TODO: Failsafe, handle this properly
 
     # TODO: Find a way to not rely on exit code?
-    TestRunnerOutput.new(ShellCommandResult.new(exit_code: 0, stdout: test_run_logstream.read_available, stderr: ""))
+    TestRunnerOutput.new(ShellCommandResult.new(0, test_run_logstream.read_available, ""))
   end
 end
