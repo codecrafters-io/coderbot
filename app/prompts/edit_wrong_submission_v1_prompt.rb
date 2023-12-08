@@ -1,6 +1,8 @@
 class EditWrongSubmissionV1Prompt < BasePrompt
   model "gpt-4-1106-preview" # TODO: Change to turbo
 
+  # model "gpt-3.5-turbo-1106" # Temporary, until we do optimized edits
+
   # Context: course, stage, language, original_code, test_runner_output
   def call
     logstream = BufferedWriter.new(MultiWriter.new(*[ENV["DEBUG"].eql?("true") ? $stdout : nil, context.logstream].compact))

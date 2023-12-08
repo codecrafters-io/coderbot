@@ -3,12 +3,20 @@ class BasePrompt
 
   class << self
     attr_accessor :model_name
+    attr_accessor :provider_name
+    attr_accessor :provider_params
     attr_accessor :response_format
   end
 
   # DSL
   def self.model(name)
     @model_name = name
+  end
+
+  # DSL
+  def self.provider(name, **params)
+    @provider_name = name
+    @provider_params = params
   end
 
   # DSL
@@ -57,19 +65,33 @@ class BasePrompt
   end
 
   def client
-    @client ||= OpenAI::Client.new(
-      access_token: ENV.fetch("AZURE_OPENAI_API_KEY"),
-      uri_base: "https://oai.hconeai.com/openai/deployments/gpt-4-1106-preview",
-      request_timeout: 240,
-      extra_headers: {
-        "api-key": ENV.fetch("AZURE_OPENAI_API_KEY"),
-        "Helicone-Auth": "Bearer #{ENV.fetch("HELICONE_API_KEY")}",
-        "Helicone-OpenAI-Api-Base": ENV.fetch("AZURE_OPENAI_ENDPOINT"),
-        "Helicone-Property-Prompt": self.class.name,
-        "helicone-stream-force-format": "true"
-      },
-      api_type: :azure,
-      api_version: "2023-03-15-preview"
-    )
+    @client ||= case self.class.provider_name
+    when :azure
+      OpenAI::Client.new(
+        access_token: ENV.fetch("AZURE_OPENAI_API_KEY"),
+        uri_base: "https://oai.hconeai.com/openai/deployments/#{self.class.provider_params.fetch(:deployment_name)}",
+        request_timeout: 240,
+        extra_headers: {
+          "api-key": ENV.fetch("AZURE_OPENAI_API_KEY"),
+          "Helicone-Auth": "Bearer #{ENV.fetch("HELICONE_API_KEY")}",
+          "Helicone-OpenAI-Api-Base": ENV.fetch("AZURE_OPENAI_ENDPOINT"),
+          "Helicone-Property-Prompt": self.class.name,
+          "helicone-stream-force-format": "true"
+        },
+        api_type: :azure,
+        api_version: "2023-03-15-preview"
+      )
+    else # :openai
+      @client ||= OpenAI::Client.new(
+        access_token: ENV["OPENAI_API_KEY"],
+        uri_base: "https://oai.hconeai.com/",
+        request_timeout: 240,
+        extra_headers: {
+          "Helicone-Auth": "Bearer #{ENV["HELICONE_API_KEY"]}",
+          "Helicone-Property-Prompt": self.class.name,
+          "helicone-stream-force-format": "true"
+        }
+      )
+    end
   end
 end
