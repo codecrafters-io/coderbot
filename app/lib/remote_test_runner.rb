@@ -38,7 +38,8 @@ class RemoteTestRunner
       test_run_id: test_run.fetch(:id)
     )
 
-    raise "Unexpected test run status: pending" if test_run_status.fetch(:status).eql?("pending") # TODO: Failsafe, handle this properly
+    # TODO: We should handle logstream termination in core
+    # raise "Unexpected test run status: pending" if test_run_status.fetch(:status).eql?("pending") # TODO: Failsafe, handle this properly
 
     # TODO: Find a way to not rely on exit code?
     TestRunnerOutput.new(ShellCommandResult.new(0, test_run_logstream.read_available, ""))
