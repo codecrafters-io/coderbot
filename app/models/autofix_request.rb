@@ -57,6 +57,10 @@ class AutofixRequest < ApplicationRecord
     Logstream.new(logstream_url)
   end
 
+  def supports_remote_test_run?
+    codecrafters_server_url.present?
+  end
+
   def with_cloned_repository(&block)
     repository_dir = Dir.mktmpdir
     ShellCommand.run!("git clone #{repository_clone_url} #{repository_dir}")

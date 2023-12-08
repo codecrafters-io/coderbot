@@ -18,6 +18,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
         counter += 1
 
         run_tests_step = Steps::RunTestsStep.new(
+          autofix_request: autofix_request,
           workflow: self,
           stage: autofix_request.course_stage,
           local_repository: local_repository,
@@ -62,7 +63,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
 
       ended_at = Time.now
 
-      if autofix_request.success?
+      if success?
         final_code = File.read(local_repository.code_file_path)
 
         autofix_request.changed_files = [
