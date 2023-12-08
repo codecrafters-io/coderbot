@@ -9,6 +9,8 @@ class RemoteTestRunner
     branch_name = "autofix-#{(Time.now.to_f * 1000).round}"
 
     commit_sha = Dir.chdir(@repository_dir) do
+      ShellCommand.run!("git config user.name 'codecrafters-bot'")
+      ShellCommand.run!("git config user.email 'hello@codecrafters.io'")
       ShellCommand.run!("git checkout -b #{branch_name}")
       ShellCommand.run!("git add .")
       ShellCommand.run!("git commit --allow-empty -m 'Autofix [skip ci]'")
