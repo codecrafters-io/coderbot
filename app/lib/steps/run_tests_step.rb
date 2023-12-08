@@ -15,17 +15,13 @@ class Steps::RunTestsStep < Steps::BaseStep
 
   def do_run!
     logstream.info("Running tests...")
-    self.test_runner_output = LocalTestRunner.new(stage.course, local_repository.repository_dir).run_tests(stage)
+    logstream.append("\n")
+    $stdout.write("\n") if is_debug?
+
+    self.test_runner_output = LocalTestRunner.new(stage.course, local_repository.repository_dir).run_tests(stage, stream_output: is_debug?, logstream: logstream)
 
     logstream.append("\n")
-    logstream.append(test_runner_output.raw_output)
-    logstream.append("\n\n")
-
-    if ENV["DEBUG"].eql?("true")
-      puts ""
-      puts test_runner_output.raw_output
-      puts ""
-    end
+    $stdout.write("\n") if is_debug?
 
     if test_runner_output.passed?
       success!
@@ -34,5 +30,11 @@ class Steps::RunTestsStep < Steps::BaseStep
       failure!
       logstream.error("Tests failed!")
     end
+
+    logstream.append("\n")
+  end
+
+  def is_debug?
+    ENV["DEBUG"].eql?("true")
   end
 end

@@ -1,18 +1,20 @@
-class Solver < ApplicationRecord
-  ALL_STATUSES = %w[not_started started failure success error].freeze
+class AutofixRequest < ApplicationRecord
+  ALL_STATUSES = %w[not_started in_progress failure success error].freeze
 
   enum status: ALL_STATUSES.zip(ALL_STATUSES).to_h
 
   validates_presence_of :repository_clone_url
-  validates_presence_of :last_submission_commit_sha
+  validates_presence_of :submission_commit_sha
   validates_presence_of :language_slug
   validates_presence_of :course_slug
   validates_presence_of :course_stage_slug
   validates_presence_of :logstream_url
 
+  validates_presence_of :explanation_markdown, if: :finalized?
+
   validates_presence_of :duration_ms, if: :success?
   validates_presence_of :steps_count, if: :success?
-  validates_presence_of :final_diff, if: :success?
+  validates_presence_of :changed_files, if: :success?
 
   validates_presence_of :course
   validates_presence_of :course_stage
@@ -22,7 +24,9 @@ class Solver < ApplicationRecord
   end
 
   def changed_lines_count
-    final_diff.split("\n").count { |line| line.start_with?("+", "-") }
+    changed_files.map do |changed_file|
+      changed_file["diff"].split("\n").count { |line| line.start_with?("+", "-") }
+    end.sum
   end
 
   def course
@@ -37,8 +41,12 @@ class Solver < ApplicationRecord
     (duration_ms.to_f / 1000.0).round(2)
   end
 
+  def finalized?
+    success? || failure? || error?
+  end
+
   def friendly_id
-    @friendly_id ||= FriendlyIdGenerator.generate(Integer(last_successful_submission_commit_sha, 16))
+    @friendly_id ||= FriendlyIdGenerator.generate(Integer(submission_commit_sha, 16))
   end
 
   def language

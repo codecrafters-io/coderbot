@@ -7,7 +7,7 @@ class LocalTestRunner
     @repository_dir = repository_dir
   end
 
-  def run_tests(stage)
+  def run_tests(stage, logstream: nil, stream_output: false)
     buildpack = course.buildpacks.detect { |buildpack| buildpack.slug == language_pack } || raise("No buildpack found for #{language_pack}")
 
     Tempfile.create do |tmpfile|
@@ -42,7 +42,7 @@ class LocalTestRunner
         "#{docker_image_tag} /init.sh"
       ].join(" "))
 
-      run_command_result = run_command.run(stream_output: false, summarize: false)
+      run_command_result = run_command.run(stream_output: stream_output, summarize: false, logstream: logstream)
 
       # Precompilation failures might cause the test runner to exit with a non-zero exit code.
       # raise "Failed to run tests, got exit code #{run_command_result.exit_code}. Stdout: #{run_command_result.stdout} Stderr: #{run_command_result.stderr}" unless [0, 1].include?(run_command_result.exit_code)
