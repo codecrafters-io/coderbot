@@ -27,6 +27,14 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
 
         run_tests_step.run!
 
+        # TEMP
+        # failure!
+        # autofix_request.explanation_markdown = <<~MARKDOWN
+        #   Failure.
+        # MARKDOWN
+
+        # break
+
         if run_tests_step.success?
           raise "test passed on first try (#{autofix_request.course_slug}/#{autofix_request.language_slug})" if counter == 1
 
