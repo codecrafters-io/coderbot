@@ -6,7 +6,7 @@ download_datasets:
 serve:
 	lsof -t -i :5002 | xargs kill -9 # Kill orphaned rails server
 	docker-compose up --build -d --remove-orphans
-	foreman start -f Procfile.dev -c "worker=2,web=1"
+	foreman start -f Procfile.dev -c "worker=2,web=1,scheduler=1"
 
 test_small:
 	scripts/trigger_gh_workflow.sh coderbot_v2_dataset_7
