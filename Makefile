@@ -4,8 +4,9 @@ download_datasets:
 	scripts/download_dataset.sh coderbot_v2_dataset_140
 
 serve:
-	docker-compose up -d
-	PORT=5002 bundle exec rails s
+	lsof -t -i :5002 | xargs kill -9 # Kill orphaned rails server
+	docker-compose up --build -d --remove-orphans
+	foreman start -f Procfile.dev -c "worker=2,web=1"
 
 test_small:
 	scripts/trigger_gh_workflow.sh coderbot_v2_dataset_7
