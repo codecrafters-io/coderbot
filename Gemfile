@@ -119,3 +119,12 @@ gem "terminal-table"
 # Error reporting
 gem "sentry-ruby"
 gem "sentry-rails"
+gem "sentry-resque"
+
+# Resque
+gem "resque", "~> 2.6.0"
+gem "resque-scheduler", "~> 4.10.0"
+
+# Autoscaling
+gem "judoscale-rails"
+gem "judoscale-resque"
