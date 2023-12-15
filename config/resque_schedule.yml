@@ -1,0 +1,5 @@
+abandon_stale_autofix_requests:
+  class: AbandonStaleAutofixRequestsJob
+  every: 2m
+  queue: default
+  description: Marks any autofix requests that have been in progress for more than 5 minutes as errored
