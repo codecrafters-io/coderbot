@@ -3,6 +3,9 @@ class AutofixRequest < ApplicationRecord
 
   enum status: ALL_STATUSES.zip(ALL_STATUSES).to_h
 
+  scope :finalized, -> { where(status: %w[success failure error]) }
+  scope :not_finalized, -> { where(status: %w[not_started in_progress]) }
+
   validates_presence_of :repository_clone_url
   validates_presence_of :submission_commit_sha
   validates_presence_of :language_slug
