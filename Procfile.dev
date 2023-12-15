@@ -1,0 +1,3 @@
+web: OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES PORT=5002 bundle exec rails s
+worker: INTERVAL=0.1 OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES RUN_AT_EXIT_HOOKS=true QUEUES=high,* COUNT=4 bundle exec rake resque:workers
+
