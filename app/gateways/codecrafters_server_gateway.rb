@@ -16,7 +16,9 @@ class CodecraftersServerGateway
 
     {
       id: response.fetch("id"),
-      logstream_url: response.fetch("logstream_url")
+      logstream_url: response.fetch("logstream_url"),
+      pending_build_id: response.fetch("pending_build_id"),
+      pending_build_logstream_url: response.fetch("pending_build_logstream_url")
     }
   end
 
