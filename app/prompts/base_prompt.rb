@@ -76,7 +76,6 @@ class BasePrompt
           "Helicone-Auth": "Bearer #{ENV.fetch("HELICONE_API_KEY")}",
           "Helicone-OpenAI-Api-Base": ENV.fetch("AZURE_OPENAI_ENDPOINT"),
           "Helicone-Property-Prompt": self.class.name,
-          "helicone-stream-force-format": "true"
         },
         api_type: :azure,
         api_version: "2023-03-15-preview"
@@ -89,7 +88,6 @@ class BasePrompt
         extra_headers: {
           "Helicone-Auth": "Bearer #{ENV["HELICONE_API_KEY"]}",
           "Helicone-Property-Prompt": self.class.name,
-          "helicone-stream-force-format": "true"
         }
       )
     end
