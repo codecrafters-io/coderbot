@@ -20,6 +20,8 @@ class ProcessAutofixRequestJob < ApplicationJob
       autofix_request.failure!
     end
   rescue => e
+    Sentry.capture_exception(e)
+
     puts e.backtrace.reverse.join("\n")
     puts "Error: #{e.message}"
 
