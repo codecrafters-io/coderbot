@@ -79,7 +79,7 @@ class GenerateHintV1Prompt < BasePrompt
       Here are some rules to follow:
 
       * Only explain the primary bug (the one most related to the test runner output above), don't explain every single change in the diff.
-      * Explaing what the primary issue is, and include a code block that explains the mistake (it should include both the "wrong" and "correct" usage).
+      * Explain how the user should fix the bug, don't fix it for them.
       * Keep your explanation short and to the point.
 
       Reply with your explanation in markdown format below. Start your explanation with "It looks like...".
