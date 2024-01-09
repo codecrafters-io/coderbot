@@ -14,6 +14,14 @@ class AutofixRequestsController < ApplicationController
       submission_commit_sha: params[:submission_commit_sha]
     )
 
+    EventLogger.info(
+      "autofix_request.created",
+      autofix_request_id: autofix_request.id,
+      language_slug: autofix_request.language_slug,
+      course_slug: autofix_request.course_slug,
+      course_stage_slug: autofix_request.course_stage_slug
+    )
+
     ProcessAutofixRequestJob.perform_later(autofix_request)
 
     render json: {id: autofix_request.id, status: autofix_request.status}
