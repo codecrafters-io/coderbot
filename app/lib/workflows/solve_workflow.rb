@@ -14,6 +14,9 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
       original_code = File.read(local_repository.code_file_path)
       counter = 0
 
+      run_tests_steps = []
+      attempt_fix_steps = []
+
       loop do
         counter += 1
 
@@ -26,6 +29,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
         )
 
         run_tests_step.run!
+        run_tests_steps << run_tests_step
 
         # TEMP
         # failure!
@@ -37,10 +41,6 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
 
         if run_tests_step.success?
           raise "test passed on first try (#{autofix_request.course_slug}/#{autofix_request.language_slug})" if counter == 1
-
-          autofix_request.explanation_markdown = <<~MARKDOWN
-            The issue with the original submission was XYZ...
-          MARKDOWN
 
           success!
 
@@ -67,6 +67,7 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
         )
 
         attempt_fix_step.run!
+        attempt_fix_steps << attempt_fix_step
       end
 
       ended_at = Time.now
@@ -80,6 +81,18 @@ class Workflows::SolveWorkflow < Workflows::BaseWorkflow
             filename: local_repository.relative_code_file_path
           }
         ]
+
+        autofix_request.logstream.info("Generating hint...")
+        autofix_request.logstream.append("\n")
+
+        autofix_request.explanation_markdown = GenerateHintV1Prompt.call!(
+          course: autofix_request.course_stage.course,
+          stage: autofix_request.course_stage,
+          language: autofix_request.language,
+          changed_files: autofix_request.changed_files,
+          test_runner_output: run_tests_steps[0].test_runner_output,
+          logstream: autofix_request.logstream
+        ).result
       end
 
       autofix_request.steps_count = counter
