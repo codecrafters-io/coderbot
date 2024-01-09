@@ -144,6 +144,7 @@ GEM
     judoscale-ruby (1.5.2)
     language_server-protocol (3.17.0.3)
     lint_roller (1.1.0)
+    logstash-event (1.2.02)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -372,6 +373,7 @@ DEPENDENCIES
   jbuilder
   judoscale-rails
   judoscale-resque
+  logstash-event
   mustache
   pg
   pmap

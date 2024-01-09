@@ -128,3 +128,6 @@ gem "resque-scheduler", "~> 4.10.0"
 # Autoscaling
 gem "judoscale-rails"
 gem "judoscale-resque"
+
+# Structured logging
+gem "logstash-event"
