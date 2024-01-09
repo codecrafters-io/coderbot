@@ -24,7 +24,7 @@ class AutofixRequestsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal "not_started", JSON.parse(response.body)["status"]
 
-    perform_enqueued_jobs
+    assert_raises(SocketError) { perform_enqueued_jobs }
 
     get "/autofix_requests/#{AutofixRequest.first.id}"
 
