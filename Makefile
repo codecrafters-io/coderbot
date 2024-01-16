@@ -2,6 +2,10 @@ download_datasets:
 	scripts/download_dataset.sh coderbot_v2_dataset_7
 	scripts/download_dataset.sh coderbot_v2_dataset_35
 	scripts/download_dataset.sh coderbot_v2_dataset_140
+	scripts/download_dataset.sh coderbot_v2_stage_2_regression_dataset_10
+	scripts/download_dataset.sh coderbot_v2_stage_2_regression_dataset_50
+	scripts/download_dataset.sh coderbot_v2_stage_2_regression_dataset_100
+
 
 serve:
 	lsof -t -i :5002 | xargs kill -9 # Kill orphaned rails server
