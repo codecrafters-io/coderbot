@@ -35,7 +35,7 @@ class ProcessAutofixRequestJob < ApplicationJob
       Try again? Contact us at hello@codecrafters.io if this persists.
     ERR
 
-    autofix_request.update!(status: "error", explanation_markdown: explanation_markdown)
+    autofix_request.update!(status: "error", explanation_markdown: explanation_markdown, error_message: e.message)
   ensure
     if autofix_request.codecrafters_server_url.present?
       CodecraftersServerGateway.new.notify_autofix_request_completed(autofix_request_id: autofix_request.id, codecrafters_server_url: autofix_request.codecrafters_server_url)

@@ -168,7 +168,7 @@ class DatasetValidator
         autofix_request.status.eql?("success") ? autofix_request.changed_lines_count : "-",
         autofix_request.status.eql?("success") ? autofix_request.steps_count : "-",
         autofix_request.status.eql?("success") ? "#{autofix_request.duration_secs}s" : "-",
-        autofix_request.status.eql?("error") ? autofix_request.error_message : "-"
+        autofix_request.status.eql?("error") ? (autofix_request.error_message.presence || "-").truncate(30) : "-"
       ]
     end
 
