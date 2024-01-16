@@ -21,6 +21,15 @@ test_medium:
 test_large:
 	scripts/trigger_gh_workflow.sh coderbot_v2_dataset_140
 
+test_stage_2_regression_small:
+	scripts/trigger_gh_workflow.sh coderbot_v2_stage_2_regression_dataset_10
+
+test_stage_2_regression_medium:
+	scripts/trigger_gh_workflow.sh coderbot_v2_stage_2_regression_dataset_50
+
+test_stage_2_regression_large:
+	scripts/trigger_gh_workflow.sh coderbot_v2_stage_2_regression_dataset_100
+
 test_large_against_main:
 	scripts/trigger_gh_workflow.sh coderbot_v2_dataset_140 main
 	scripts/trigger_gh_workflow.sh coderbot_v2_dataset_140
