@@ -60,6 +60,8 @@ jobs:
         run: bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/${{ inputs.dataset_name }}
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
           HELICONE_API_KEY: ${{ secrets.HELICONE_API_KEY }}
           GITHUB_TOKEN: ${{github.token}}
           GIT_BRANCH: ${{ inputs.branch_name }}
