@@ -41,5 +41,9 @@ test_medium_against_main:
 local_test_small:
 	bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/coderbot_v2_dataset_7
 
+# Test a dataset containing a single submission exported from core
+local_test_tmp:
+	DEBUG=true bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/tmp 0
+
 local_test_1:
 	DEBUG=true bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/coderbot_v2_stage_2_regression_dataset_10 1

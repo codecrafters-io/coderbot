@@ -44,7 +44,7 @@ class DatasetValidator
     end
 
     autofix_requests.peach(16) do |autofix_request|
-      puts "Validating #{autofix_request.friendly_id} (#{autofix_request.course_slug}/#{autofix_request.language_slug}})"
+      puts "Validating #{autofix_request.friendly_id} (#{autofix_request.course_slug}/#{autofix_request.language_slug})"
 
       ProcessAutofixRequestJob.perform_now(autofix_request)
 
