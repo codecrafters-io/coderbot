@@ -1,0 +1,1 @@
+- Remove `session_country` from `default_event_properties`

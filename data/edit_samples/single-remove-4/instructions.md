@@ -1,0 +1,1 @@
+- Remove the `error` method from the `EventLogger` class

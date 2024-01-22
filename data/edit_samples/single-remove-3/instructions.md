@@ -1,0 +1,1 @@
+- Remove the `warn` method from the `EventLogger` class

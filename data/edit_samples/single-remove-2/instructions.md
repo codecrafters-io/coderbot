@@ -1,0 +1,1 @@
+- Remove the `info` method from the `EventLogger` class
