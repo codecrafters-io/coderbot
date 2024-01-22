@@ -1,6 +1,7 @@
 class Experimental::EditCodePrompt < BasePrompt
-  provider :azure, deployment_name: "gpt-35-turbo"
-  model "gpt-35-turbo"
+  # provider :azure, deployment_name: "gpt-35-turbo"
+  provider :azure, deployment_name: "gpt-4-1106-preview"
+  model "dummy"
 
   # Context: original_code, edit_instructions
   def call
@@ -20,7 +21,7 @@ class Experimental::EditCodePrompt < BasePrompt
       The user will ask you to edit some code.
 
       - Print the edited code directly, don't include ``` or any other extra formatting.
-      - Only make the changes the user asks for, don't make any other changes.
+      - Only make the changes the user asks for in the <edit-instructions> block. Don't make any other changes.
       - Don't add extra comments unless the user asks for them.
     PROMPT
   end

@@ -4,12 +4,17 @@ stats = []
 
 3.times do |i|
   puts "Editing attempt ##{i + 1}"
-  edited_code = Experimental::EditCodePrompt.call!(
+
+  edited_code = Experimental::EditCodePromptV2.call!(
     original_code: original_code,
-    edit_instructions_markdown: <<~MARKDOWN
-      Remove the `protected` keyword from the `ensure_flush_thread_is_running!` method.
+    edit_instructions_markdown: <<~MARKDOWN,
+      - Remove the `protected` keyword above the `ensure_flush_thread_is_running!` method.
     MARKDOWN
+    logstream: $stdout
   ).result
+
+  puts edited_code
+  exit
 
   diff = Diffy::Diff.new(original_code, edited_code, context: 3)
   added_lines = diff.each.select { |line| line.match(/^\+/) }
