@@ -46,4 +46,4 @@ local_test_tmp:
 	DEBUG=true bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/tmp 0
 
 local_test_1:
-	DEBUG=true bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/coderbot_v2_dataset_35 0
+	DEBUG=true bundle exec rails runner scripts/validate_dataset.rb tmp/datasets/coderbot_v2_dataset_7 4

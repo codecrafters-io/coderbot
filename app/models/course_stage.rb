@@ -8,6 +8,7 @@ class CourseStage
   attr_accessor :course_id
   attr_accessor :slug
   attr_accessor :description_markdown_template
+  attr_accessor :marketing_markdown
   attr_accessor :position
   attr_accessor :name
 
@@ -15,6 +16,7 @@ class CourseStage
   validates_presence_of :course_id
   validates_presence_of :slug
   validates_presence_of :description_markdown_template
+  validates_presence_of :marketing_markdown
   validates_presence_of :position
   validates_presence_of :name
 
@@ -23,6 +25,7 @@ class CourseStage
       "id" => nil,
       "course_id" => nil,
       "slug" => nil,
+      "marketing_markdown" => nil,
       "description_markdown_template" => nil,
       "position" => nil,
       "name" => nil
@@ -43,6 +46,10 @@ class CourseStage
     variables["reader_is_bot"] = true
 
     Mustache.render(description_markdown_template, variables)
+  end
+
+  def next_stages
+    course.stages.sort_by(&:position).drop_while { |stage| stage.position <= position }
   end
 
   def previous_stage

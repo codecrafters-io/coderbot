@@ -60,6 +60,13 @@ class Experimental::PlanChangesPrompt < BasePrompt
 
       </current-stage-instructions>
 
+      There are #{[stage.next_stages.count, 5].min} more stages after this one, but the user doesn't have to implement them yet, they only need to implement this stage. Here
+      are the next stages with short descriptions:
+
+      <next-stage-descriptions>
+      #{stage.next_stages.take(5).each_with_index.map { |stage, index| "- Next Stage #{index + 1}: #{stage.name} (#{stage.marketing_markdown})" }.join("\n\n")}
+      </next-stage-descriptions>
+
       The user will provide their #{language.name} code and the error message they saw when they submitted their code.
 
       Your goal is to identify the most likely bug that prevents them from passing this stage.
@@ -70,9 +77,12 @@ class Experimental::PlanChangesPrompt < BasePrompt
 
       - Surround your plan with `<fix-plan>` and `</fix-plan>` tags.
       - Format your plan as a markdown list.
-      - Keep your plan to 3 steps or less. If you think there's more than one bug, just fix the most important one.
+      - Only suggest one bug fix at a time. If you think there's more than one bug, just fix the most important one.
+      - Keep your plan to a single bullet point.
       - Be concise.
       - Make each step as specific as possible. For example, instead of saying "Add a `print()` method", say "Add a `print()` method below the `inspect()` method".
+      - Do not suggest commenting out code, if you think code should be commented out, suggest deleting it instead.
+      - Do not suggest any optional changes. If you think a change is optional, don't suggest it.
       - Don't print the edited code, just print out the plan. Someone else will edit the code.
       - A junior engineer will be implementing your plan, so make sure it's easy to follow.
       - Keep your suggested changes minimal, only suggest changes necessary to pass the current stage.

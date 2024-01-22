@@ -3,8 +3,8 @@ class Experimental::EditCodePrompt < BasePrompt
   # provider :azure, deployment_name: "gpt-4-1106-preview"
   provider :openai
 
-  model "gpt-3.5-turbo-16k"
-  # model "gpt-4-1106-preview"
+  # model "gpt-3.5-turbo-16k"
+  model "gpt-4-1106-preview"
 
   # Context: original_code, edit_instructions
   def call

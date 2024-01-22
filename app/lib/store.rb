@@ -51,6 +51,7 @@ class Store
           course_id: included_resource["relationships"]["course"]["data"]["id"],
           description_markdown_template: included_resource["attributes"]["description-markdown-template"],
           id: included_resource["id"],
+          marketing_markdown: included_resource["attributes"]["marketing-markdown"],
           position: included_resource["attributes"]["position"],
           slug: included_resource["attributes"]["slug"],
           name: included_resource["attributes"]["name"]
@@ -79,7 +80,14 @@ class Store
       model_class = Object.const_get(model_class)
 
       serialized_models.each do |serialized_model|
-        instance = model_class.new(serialized_model).tap(&:validate!)
+        instance = begin
+          model_class.new(serialized_model).tap(&:validate!)
+        rescue ActiveModel::ValidationError => e
+          puts "Failed to load #{model_class} with id #{serialized_model["id"]}: #{e.message}"
+          puts "Attributes: #{serialized_model}"
+          exit 1
+        end
+
         add(instance)
       end
     end
