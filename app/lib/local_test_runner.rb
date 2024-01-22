@@ -16,7 +16,7 @@ class LocalTestRunner
 
       dockerfile_path = tmpfile.path
 
-      build_command = ShellCommand.new("docker build -t #{docker_image_tag}  -f #{dockerfile_path} #{@repository_dir}")
+      build_command = ShellCommand.new("docker build --load -t #{docker_image_tag}  -f #{dockerfile_path} #{@repository_dir}")
       build_command.run!
 
       tester_dir = TesterDownloader.new(course).download_if_needed
