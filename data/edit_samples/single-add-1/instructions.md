@@ -1,0 +1,1 @@
+- Add a `warn` method to the `EventLogger` class (similar to `info`) which calls `log` with the `WARN` level.

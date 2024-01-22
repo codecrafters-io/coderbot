@@ -75,7 +75,7 @@ class BasePrompt
           "api-key": ENV.fetch("AZURE_OPENAI_API_KEY"),
           "Helicone-Auth": "Bearer #{ENV.fetch("HELICONE_API_KEY")}",
           "Helicone-OpenAI-Api-Base": ENV.fetch("AZURE_OPENAI_ENDPOINT"),
-          "Helicone-Property-Prompt": self.class.name,
+          "Helicone-Property-Prompt": self.class.name
         },
         api_type: :azure,
         api_version: "2023-03-15-preview"
@@ -87,7 +87,7 @@ class BasePrompt
         request_timeout: 240,
         extra_headers: {
           "Helicone-Auth": "Bearer #{ENV["HELICONE_API_KEY"]}",
-          "Helicone-Property-Prompt": self.class.name,
+          "Helicone-Property-Prompt": self.class.name
         }
       )
     end

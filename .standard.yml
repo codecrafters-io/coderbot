@@ -1,2 +1,5 @@
 extend_config:
   - .rubocop/ordered_methods.yml
+
+ignore:
+  - data/**/*.rb

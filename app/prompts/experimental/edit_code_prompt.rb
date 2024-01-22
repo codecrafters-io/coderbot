@@ -1,7 +1,9 @@
 class Experimental::EditCodePrompt < BasePrompt
-  # provider :azure, deployment_name: "gpt-35-turbo"
-  provider :azure, deployment_name: "gpt-4-1106-preview"
-  model "dummy"
+  # provider :azure, deployment_name: "gpt-35-turbo-16k"
+  # provider :azure, deployment_name: "gpt-4-1106-preview"
+  provider :openai
+
+  model "gpt-3.5-turbo-16k"
 
   # Context: original_code, edit_instructions
   def call
@@ -12,6 +14,8 @@ class Experimental::EditCodePrompt < BasePrompt
       ],
       logstream: nil
     )
+
+    context.result = context.result.strip
   end
 
   protected
@@ -21,6 +25,7 @@ class Experimental::EditCodePrompt < BasePrompt
       The user will ask you to edit some code.
 
       - Print the edited code directly, don't include ``` or any other extra formatting.
+      - Print the FULL edited code, don't leave out any lines or add comments saying "Rest of the code remains unchanged".
       - Only make the changes the user asks for in the <edit-instructions> block. Don't make any other changes.
       - Don't add extra comments unless the user asks for them.
     PROMPT
