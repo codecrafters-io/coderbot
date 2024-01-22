@@ -19,7 +19,11 @@ on:
 
 jobs:
   test:
-    runs-on: namespace-profile-coderbot
+    # TODO: Investigate why this doesn't work with the namespace.so team
+    # runs-on: namespace-profile-coderbot
+
+    runs-on: ubuntu-latest-16-cores
+
     timeout-minutes: 30
 
     services:
