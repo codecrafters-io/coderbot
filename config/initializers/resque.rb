@@ -1,6 +1,8 @@
 require "resque-scheduler"
 require "resque/scheduler/server"
 
+require "active_support/all" # Required for #present?
+
 require_relative "../../app/jobs/scheduled_job_wrapper"
 
 if ENV["ACTIVE_JOB_REDIS_URL"].present?
