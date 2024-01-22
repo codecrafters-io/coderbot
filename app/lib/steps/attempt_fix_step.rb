@@ -22,7 +22,7 @@ class Steps::AttemptFixStep < Steps::BaseStep
 
     current_code = File.read(local_repository.code_file_path)
 
-    result = EditWrongSubmissionV1Prompt.call(
+    result = Experimental::PlanChangesPrompt.call(
       stage: stage,
       language: local_repository.language,
       original_code: current_code,
@@ -30,9 +30,11 @@ class Steps::AttemptFixStep < Steps::BaseStep
       logstream: logstream
     ).result
 
+    edited_code = Experimental::EditCodePrompt.call!(original_code: current_code, edit_instructions_markdown: result).result
+
     # There can be multiple code blocks, we want the one that's the longest
-    edited_code_candidates = result.scan(/```#{local_repository.language.syntax_highlighting_identifier}\n(.*?)```/m).flatten
-    edited_code = edited_code_candidates.max_by(&:length)
+    # edited_code_candidates = result.scan(/```#{local_repository.language.syntax_highlighting_identifier}\n(.*?)```/m).flatten
+    # edited_code = edited_code_candidates.max_by(&:length)
 
     # There can be text before and after the code block, that's the "explanation"
     # self.explanation = result.gsub(/```#{local_repository.language.syntax_highlighting_identifier}\n(.*?)```/m, "")
