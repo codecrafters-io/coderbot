@@ -67,6 +67,7 @@ class AutofixRequest < ApplicationRecord
   def with_cloned_repository(&block)
     repository_dir = Dir.mktmpdir
     ShellCommand.run!("git clone #{repository_clone_url} #{repository_dir}")
+    ShellCommand.run!("git -C #{repository_dir} checkout #{submission_commit_sha}")
     block.call(LocalRepository.new(repository_dir))
   ensure
     # On Github actions, using Dir.mktmpdir { |dir| ... } causes a permissions error for some reason
