@@ -1,6 +1,6 @@
 class EditWrongSubmissionV1Prompt < BasePrompt
-  model "gpt-4-1106-preview" # TODO: Change to turbo
-  provider :azure, deployment_name: "gpt-4-1106-preview"
+  model "gpt-4o"
+  provider :azure, deployment_name: "gpt-4o"
 
   # model "gpt-3.5-turbo-1106" # Temporary, until we do optimized edits
 
