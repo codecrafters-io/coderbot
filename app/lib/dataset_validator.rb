@@ -26,6 +26,12 @@ class DatasetValidator
       submission_dirs_in_dataset
     end
 
+    puts "Validating #{submission_dirs.size} submissions:"
+    submission_dirs.each do |submission_dir|
+      puts "  - #{File.basename(submission_dir)}"
+    end
+    puts ""
+
     init_store!
     init_results_dir!
     init_mlflow_run!

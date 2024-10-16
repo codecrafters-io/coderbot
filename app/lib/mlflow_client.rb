@@ -11,6 +11,10 @@ class MlflowClient
       }.to_json
     })
 
+    if response.code != 200
+      raise "Failed to create MLflow run: #{response.body}"
+    end
+
     {
       id: JSON.parse(response.body).fetch("run").fetch("info").fetch("run_id"),
       artifact_uri: JSON.parse(response.body).fetch("run").fetch("info").fetch("artifact_uri")

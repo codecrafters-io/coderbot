@@ -37,7 +37,7 @@ class AutofixRequest < ApplicationRecord
   end
 
   def course_stage
-    course.stages.detect { |stage| stage.slug == course_stage_slug } || raise(ActiveRecord::RecordNotFound)
+    course.stages.detect { |stage| stage.slug == course_stage_slug } || raise("no stage found with slug #{course_stage_slug.inspect}")
   end
 
   def duration_secs
