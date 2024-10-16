@@ -57,8 +57,8 @@ class CourseStage
   def tester_test_case_json
     {
       slug: slug,
-      tester_log_prefix: "stage-#{position}",
-      title: "Stage #{position}: #{name}"
+      tester_log_prefix: "tester::##{slug.upcase}",
+      title: "Stage ##{slug.upcase} (#{name})"
     }
   end
 end

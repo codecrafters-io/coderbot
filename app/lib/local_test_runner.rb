@@ -21,7 +21,7 @@ class LocalTestRunner
 
       tester_dir = TesterDownloader.new(course).download_if_needed
 
-      stages_to_test = [*stage.previous_stages, stage]
+      stages_to_test = [stage, *stage.previous_stages.reverse]
       test_cases_json = stages_to_test.map(&:tester_test_case_json).to_json
 
       run_command = ShellCommand.new([
