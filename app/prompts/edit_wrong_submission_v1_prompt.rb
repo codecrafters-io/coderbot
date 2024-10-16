@@ -1,6 +1,6 @@
 class EditWrongSubmissionV1Prompt < BasePrompt
-  model "gpt-4o"
-  provider :azure, deployment_name: "gpt-4o"
+  model "gpt-4o-mini"
+  provider :azure, deployment_name: "gpt-4o-mini"
 
   # model "gpt-3.5-turbo-1106" # Temporary, until we do optimized edits
 

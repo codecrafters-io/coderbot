@@ -1,6 +1,6 @@
 class GenerateHintV1Prompt < BasePrompt
-  model "gpt-4o"
-  provider :azure, deployment_name: "gpt-4o"
+  model "gpt-4o-mini"
+  provider :azure, deployment_name: "gpt-4o-mini"
 
   # Context: course, stage, language, changed_files, test_runner_output
   def call
