@@ -31,9 +31,8 @@ class LocalTestRunner
         "-v '#{File.expand_path(@repository_dir)}:/app'",
         "-v '#{File.expand_path(tester_dir)}:/tester:ro'",
         "-v '#{File.expand_path("fixtures/test.sh")}:/init.sh'",
-        "-e CODECRAFTERS_SUBMISSION_DIR=/app",
+        "-e CODECRAFTERS_REPOSITORY_DIR=/app",
         "-e CODECRAFTERS_TEST_CASES_JSON='#{test_cases_json}'",
-        "-e CODECRAFTERS_CURRENT_STAGE_SLUG=#{stage.slug}", # TODO: Remove this
         "-e TESTER_DIR=/tester",
         "-w /app",
         "--memory=4g",

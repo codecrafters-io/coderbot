@@ -16,6 +16,8 @@ class TestRunnerOutput
 
   def last_stage_logs
     blocks = test_script_result.stdout.split("\n\n")
+
+    # This finds the last block that starts with a stage identifier (it first removes ASCII color codes)
     blocks.reverse.find { |block| block.gsub(/\e\[(\d+)m/, "").start_with?("[stage-") }
   end
 

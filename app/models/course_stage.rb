@@ -9,6 +9,7 @@ class CourseStage
   attr_accessor :slug
   attr_accessor :description_markdown_template
   attr_accessor :position
+  attr_accessor :marketing_markdown
   attr_accessor :name
 
   validates_presence_of :id
