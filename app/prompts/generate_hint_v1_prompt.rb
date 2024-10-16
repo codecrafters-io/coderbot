@@ -1,6 +1,6 @@
 class GenerateHintV1Prompt < BasePrompt
-  model "gpt-4-1106-preview" # TODO: Change to turbo
-  provider :azure, deployment_name: "gpt-4-1106-preview"
+  model "gpt-4o"
+  provider :azure, deployment_name: "gpt-4o"
 
   # Context: course, stage, language, changed_files, test_runner_output
   def call
