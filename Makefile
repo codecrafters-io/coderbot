@@ -9,7 +9,7 @@ download_datasets:
 
 serve:
 	lsof -t -i :5002 | xargs kill -9 # Kill orphaned rails server
-	docker-compose up --build -d --remove-orphans
+	docker compose up --build -d --remove-orphans
 	DEBUG=true foreman start -f Procfile.dev -c "worker=2,web=1,scheduler=1"
 
 test_small:
