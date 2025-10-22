@@ -10,3 +10,9 @@ RUN opencode --version
 
 RUN git config --global user.name "codecrafters-bot"
 RUN git config --global user.email "hello@codecrafters.io"
+
+RUN curl --fail -L https://github.com/codecrafters-io/logstream/releases/download/v29/v29_linux_amd64 -o /usr/local/bin/logstream
+RUN chmod +x /usr/local/bin/logstream
+
+# Ensure logstream is installed and working
+RUN logstream help
