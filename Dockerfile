@@ -1,0 +1,9 @@
+FROM ubuntu:22.04
+
+RUN apt-get update -qq
+RUN apt-get install -y -qq curl unzip git
+
+RUN curl https://raw.githubusercontent.com/sst/opencode/refs/tags/v0.15.13/install | VERSION=v0.15.13
+
+RUN git config --global user.name "codecrafters-bot"
+RUN git config --global user.email "hello@codecrafters.io"
