@@ -1,9 +1,8 @@
-FROM ubuntu:22.04
+FROM alpine:3.22.2
 
-RUN apt-get update -qq
-RUN apt-get install -y -qq curl unzip git
+RUN apk update && apk add --no-cache curl unzip git libc6-compat gcompat
 
-RUN curl https://raw.githubusercontent.com/sst/opencode/refs/tags/v0.15.13/install | VERSION=0.15.13 bash
+RUN curl https://raw.githubusercontent.com/sst/opencode/refs/tags/v0.15.13/install | VERSION=0.15.13 SHELL=ash ash
 ENV PATH="/root/.opencode/bin:$PATH"
 
 RUN opencode --version
@@ -43,7 +42,7 @@ RUN ARCH=$(uname -m) && \
     tar -xzf /tmp/codecrafters.tar.gz -C /tmp/codecrafters && \
     mv /tmp/codecrafters/codecrafters /usr/local/bin/codecrafters && \
     chmod +x /usr/local/bin/codecrafters && \
-    rm -rf /tmp/codecrafters.tar.gz
+    rm -rf /tmp/codecrafters /tmp/codecrafters.tar.gz
 
 # Ensure codecrafters is installed and working
 RUN codecrafters --version
