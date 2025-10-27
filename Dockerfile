@@ -1,11 +1,16 @@
-FROM alpine:3.22.2
+FROM debian:bookworm-slim
 
-RUN apk update && apk add --no-cache curl unzip git libc6-compat gcompat
+RUN apt-get update && apt-get install -y curl unzip git
 
-RUN curl https://raw.githubusercontent.com/sst/opencode/refs/tags/v0.15.13/install | VERSION=0.15.13 SHELL=ash ash
+ENV OPENCODE_DISABLE_DEFAULT_PLUGINS=true
+ENV OPENCODE_DISABLE_AUTOUPDATE=true
+ENV OPENCODE_DISABLE_LSP_DOWNLOAD=true
+
+RUN curl https://raw.githubusercontent.com/sst/opencode/refs/tags/v0.15.18/install | VERSION=0.15.18 bash
 ENV PATH="/root/.opencode/bin:$PATH"
 
 RUN opencode --version
+RUN opencode run test
 
 RUN git config --global user.name "codecrafters-bot"
 RUN git config --global user.email "hello@codecrafters.io"
