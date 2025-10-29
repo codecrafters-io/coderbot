@@ -6,7 +6,7 @@ ENV OPENCODE_DISABLE_DEFAULT_PLUGINS=true
 ENV OPENCODE_DISABLE_AUTOUPDATE=true
 ENV OPENCODE_DISABLE_LSP_DOWNLOAD=true
 
-RUN curl https://raw.githubusercontent.com/sst/opencode/refs/tags/v0.15.18/install | VERSION=0.15.18 bash
+RUN curl https://raw.githubusercontent.com/sst/opencode/refs/tags/v0.15.23/install | VERSION=0.15.23 bash
 ENV PATH="/root/.opencode/bin:$PATH"
 
 RUN opencode --version
